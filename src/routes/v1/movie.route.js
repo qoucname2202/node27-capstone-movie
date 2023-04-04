@@ -1,0 +1,20 @@
+const movieController = require('../../controllers/movie.controller')
+const express = require('express')
+const movieRoute = express.Router()
+
+movieRoute.get('/banner', movieController.getAllBanner)
+movieRoute.get('/search', movieController.searchMovie)
+movieRoute.get('/', movieController.getAllMovie)
+movieRoute.get('/users-like', movieController.getUsersLikeMovie)
+movieRoute.get('/users-rating', movieController.getUsersRatingMovie)
+movieRoute.get('/paging-movie-by-date', movieController.getMovieByDate)
+movieRoute.post('/upload-poster', movieController.uploadPoster)
+movieRoute.post('/insert', movieController.insertMovie)
+movieRoute.put('/update', movieController.updateMovie)
+movieRoute.delete('/delete', movieController.deleteMovie)
+movieRoute.get('/directors', movieController.getListDirector)
+movieRoute.get('/actors', movieController.getListActor)
+movieRoute.get('/genres', movieController.getListGenres)
+movieRoute.get('/tags', movieController.getListTags)
+
+module.exports = movieRoute
