@@ -1,6 +1,21 @@
-const express = require('express');
+const express = require('express')
+const helmet = require('helmet')
+const morgan = require('morgan')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const { PORT } = require('./src/config')
+const cookieParser = require('cookie-parser')
+const rootRoute = require('./src/routes')
+const app = express()
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+app.use(express.json())
+app.use(helmet())
+app.use(express.urlencoded({ limit: '50mb', extended: true }))
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(cors())
+app.use(cookieParser())
+app.use(morgan('common'))
+app.use(express.static('.'))
+app.use('/api', rootRoute)
 
-app.listen(PORT, () => console.log(`🚀 Server Running On Port 8080`));
+app.listen(PORT, () => console.log(`🚀 Server Running On Port ${PORT || 3001}`))
