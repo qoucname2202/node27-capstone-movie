@@ -36,24 +36,25 @@ const validators = {
         .equal(Joi.ref('password'))
         .required()
         .options({ messages: { 'any.only': 'Confirm password does not match!' } }),
-      email: Joi.string().email().required().messages({
-        'string.empty': ValidateMessage.ERROR_EMAIL.EMPTY,
-        'string.email': ValidateMessage.ERROR_EMAIL.EMAIL_FORMAT
-      }),
-      phone: Joi.string().max(10).pattern(regexPhoneNumber).required().messages({
-        'string.empty': ValidateMessage.ERROR_PHONE.EMPTY,
-        'string.max': ValidateMessage.ERROR_PHONE.MAX_LENGTH,
-        'string.pattern.base': ValidateMessage.ERROR_PHONE.PATTERN
-      }),
       name: Joi.string().min(3).max(30).required().messages({
         'string.empty': ValidateMessage.ERROR_NAME.EMPTY,
         'string.min': ValidateMessage.ERROR_NAME.MIN_LENGTH,
         'string.max': ValidateMessage.ERROR_NAME.MAX_LENGTH,
         'string.base': ValidateMessage.ERROR_NAME.NAME_FORMAT
       }),
-      gender: Joi.string().required().messages({
+      email: Joi.string().email().required().messages({
+        'string.empty': ValidateMessage.ERROR_EMAIL.EMPTY,
+        'string.email': ValidateMessage.ERROR_EMAIL.EMAIL_FORMAT
+      }),
+      mobile_no: Joi.string().max(10).pattern(regexPhoneNumber).required().messages({
+        'string.empty': ValidateMessage.ERROR_PHONE.EMPTY,
+        'string.max': ValidateMessage.ERROR_PHONE.MAX_LENGTH,
+        'string.pattern.base': ValidateMessage.ERROR_PHONE.PATTERN
+      }),
+      gender: Joi.string().valid('male', 'female').required().messages({
         'string.empty': ValidateMessage.ERROR_GENDER.EMPTY,
-        'string.base': ValidateMessage.ERROR_GENDER.GENDER_FORMAT
+        'string.base': ValidateMessage.ERROR_GENDER.GENDER_FORMAT,
+        'any.only': ValidateMessage.ERROR_GENDER.GENDER_DIFF
       })
     })
     return userSchema.validate(data, { stripUnknown: true, abortEarly: false })

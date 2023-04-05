@@ -7,12 +7,12 @@ const ValidateMessage = {
   },
   ERROR_PASSWORD: {
     PATTERN: 'Password must contain at least 1 number, 1 uppercase & 1 special character @$!%*#?&',
-    LENGTH: 'The length of the parameter should be more than 8 character',
+    LENGTH: 'The length of password should be more than 8 character',
     EMPTY: 'Password cannot be an empty field'
   },
   ERROR_NEW_PASSWORD: {
     PATTERN: 'New password must contain at least 1 number, 1 uppercase & 1 special character @$!%*#?&',
-    LENGTH: 'The length of the parameter should be more than 8 character',
+    LENGTH: 'The length of password should be more than 8 character',
     EMPTY: 'New password cannot be an empty field'
   },
   ERROR_EMAIL: {
@@ -20,13 +20,14 @@ const ValidateMessage = {
     EMPTY: 'Email cannot be an empty field'
   },
   ERROR_PHONE: {
-    PATTERN: 'Phone must contain at least 10 number and phone has the first number 03, 05, 07, 08, 09',
-    MAX_LENGTH: 'The length of phone must be a string with a maximum 10',
-    EMPTY: 'Phone cannot be an empty field'
+    PATTERN: 'Mobile_no must contain at least 10 number and phone has the first number 03, 05, 07, 08, 09',
+    MAX_LENGTH: 'The length of Mobile_no must be a string with a maximum 10',
+    EMPTY: 'Mobile_no cannot be an empty field'
   },
   ERROR_GENDER: {
     EMPTY: 'Gender cannot be an empty field!',
-    GENDER_FORMAT: 'Gender must be a string!'
+    GENDER_FORMAT: 'Gender must be a string!',
+    GENDER_DIFF: 'Gender must be male or female'
   },
   ERROR_ID_NUMB: {
     NUMB_FORMAT: 'Invalid field must be a number',

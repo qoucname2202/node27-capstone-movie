@@ -1,0 +1,326 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model actor {
+  act_id         Int          @id @default(autoincrement())
+  full_name      String       @db.VarChar(100)
+  alias          String?      @db.VarChar(150)
+  gender         Boolean      @default(true)
+  birth_day      String?      @db.VarChar(50)
+  place_of_birth String?      @db.VarChar(500)
+  avatar         String?      @db.LongText
+  bio            String?      @db.LongText
+  is_removed     Boolean?     @default(false)
+  created_at     String?      @db.VarChar(100)
+  updated_at     String?      @db.VarChar(100)
+  movie_cast     movie_cast[]
+}
+
+model age_type {
+  age_id        Int       @id @default(autoincrement())
+  age_type_name String    @db.VarChar(50)
+  description   String?   @db.Text
+  is_removed    Boolean?  @default(false)
+  created_at    DateTime? @default(now()) @db.Timestamp(0)
+  movie         movie[]
+}
+
+model banner {
+  id         Int       @id @default(autoincrement())
+  movie_id   Int?
+  image      String?   @db.LongText
+  is_removed Boolean?  @default(false)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  movie      movie?    @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_BANNER")
+
+  @@index([movie_id], map: "FR_BANNER")
+}
+
+model book_tickets {
+  user_id      Int
+  showtimes_id Int
+  seat_id      Int
+  is_removed   Boolean?   @default(false)
+  created_at   String?    @db.VarChar(100)
+  updated_at   String?    @db.VarChar(100)
+  seat         seat       @relation(fields: [seat_id], references: [seat_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_BT_SEAT")
+  show_times   show_times @relation(fields: [showtimes_id], references: [showtimes_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_BT_SHOWTIME")
+  user         user       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_BT_USER")
+
+  @@id([user_id, showtimes_id, seat_id])
+  @@index([seat_id], map: "FR_BT_SEAT")
+  @@index([showtimes_id], map: "FR_BT_SHOWTIME")
+}
+
+model cinema {
+  cinema_id      Int            @id @default(autoincrement())
+  cinema_name    String         @db.VarChar(400)
+  cluster_id     String         @db.VarChar(200)
+  is_removed     Boolean?       @default(false)
+  created_at     String?        @db.VarChar(100)
+  updated_at     String?        @db.VarChar(100)
+  cinema_cluster cinema_cluster @relation(fields: [cluster_id], references: [cluster_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_CINEMA_CLUS")
+  seat           seat[]
+  show_times     show_times[]
+
+  @@index([cluster_id], map: "FR_CINEMA_CLUS")
+}
+
+model cinema_cluster {
+  cluster_id     String         @id @db.VarChar(200)
+  cluster_name   String         @db.VarChar(300)
+  address        String         @db.VarChar(500)
+  image          String?        @db.LongText
+  system_id      String         @db.VarChar(200)
+  is_removed     Boolean?       @default(false)
+  created_at     String?        @db.VarChar(100)
+  updated_at     String?        @db.VarChar(100)
+  cinema         cinema[]
+  theater_system theater_system @relation(fields: [system_id], references: [system_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_CC_CLS")
+
+  @@index([system_id], map: "FR_CC_CLS")
+}
+
+model comment_movie {
+  comment_id   Int     @default(autoincrement())
+  user_id      Int
+  movie_id     Int
+  content      String  @db.Text
+  comment_star Int?
+  date_comment String? @db.VarChar(100)
+  updated_at   String? @db.VarChar(100)
+  movie        movie   @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_MOVIE_COMMENT")
+  user         user    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_USER_COMMENT")
+
+  @@id([comment_id, user_id, movie_id])
+  @@index([movie_id], map: "FK_MOVIE_COMMENT")
+  @@index([user_id], map: "FR_USER_COMMENT")
+}
+
+model director {
+  dir_id         Int              @id @default(autoincrement())
+  dir_name       String           @db.VarChar(255)
+  is_removed     Boolean?         @default(false)
+  created_at     String?          @db.VarChar(100)
+  updated_at     String?          @db.VarChar(100)
+  movie_director movie_director[]
+}
+
+model genres {
+  gen_id       Int            @id @default(autoincrement())
+  gen_type     String         @db.VarChar(255)
+  is_removed   Boolean?       @default(false)
+  created_at   String?        @db.VarChar(100)
+  updated_at   String?        @db.VarChar(100)
+  movie_genres movie_genres[]
+}
+
+model like_movie {
+  user_id   Int
+  movie_id  Int
+  date_like String? @db.VarChar(100)
+  movie     movie   @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_MOVIE_LIKE")
+  user      user    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_USER_LIKE")
+
+  @@id([user_id, movie_id])
+  @@index([movie_id], map: "FK_MOVIE_LIKE")
+}
+
+model movie {
+  movie_id       Int              @id @default(autoincrement())
+  movie_name     String           @db.VarChar(255)
+  alias          String?          @db.VarChar(255)
+  trailer        String           @db.VarChar(255)
+  short_desc     String?          @db.LongText
+  overview       String           @db.LongText
+  poster         String           @db.LongText
+  backdrops      String?          @db.LongText
+  runtime        Int?
+  country        String?          @db.VarChar(255)
+  language       String?          @db.VarChar(255)
+  age_id         Int?
+  release_date   String?          @db.VarChar(100)
+  hot            Boolean?         @default(false)
+  comming_soon   Boolean?         @default(false)
+  now_showing    Boolean?         @default(false)
+  is_removed     Boolean?         @default(false)
+  created_at     String?          @db.VarChar(100)
+  updated_at     String?          @db.VarChar(100)
+  banner         banner[]
+  comment_movie  comment_movie[]
+  like_movie     like_movie[]
+  age_type       age_type?        @relation(fields: [age_id], references: [age_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_AGE")
+  movie_cast     movie_cast[]
+  movie_director movie_director[]
+  movie_genres   movie_genres[]
+  movie_tags     movie_tags[]
+  rate_movie     rate_movie[]
+  show_times     show_times[]
+
+  @@index([age_id], map: "FR_AGE")
+}
+
+model movie_cast {
+  act_id     Int
+  movie_id   Int
+  role       String  @db.VarChar(150)
+  created_at String? @db.VarChar(100)
+  updated_at String? @db.VarChar(100)
+  actor      actor   @relation(fields: [act_id], references: [act_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MC_ACT")
+  movie      movie   @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MC_MV")
+
+  @@id([act_id, movie_id])
+  @@index([movie_id], map: "FR_MC_MV")
+}
+
+model movie_director {
+  dir_id     Int
+  movie_id   Int
+  role       String   @db.VarChar(150)
+  created_at String?  @db.VarChar(100)
+  updated_at String?  @db.VarChar(100)
+  director   director @relation(fields: [dir_id], references: [dir_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MD_DR")
+  movie      movie    @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MD_MV")
+
+  @@id([dir_id, movie_id])
+  @@index([movie_id], map: "FR_MD_MV")
+}
+
+model movie_genres {
+  gen_id     Int
+  movie_id   Int
+  created_at String? @db.VarChar(100)
+  updated_at String? @db.VarChar(100)
+  genres     genres  @relation(fields: [gen_id], references: [gen_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MG_GR")
+  movie      movie   @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MG_MV")
+
+  @@id([gen_id, movie_id])
+  @@index([movie_id], map: "FR_MG_MV")
+}
+
+model movie_tags {
+  tags_id    Int
+  movie_id   Int
+  created_at String? @db.VarChar(100)
+  updated_at String? @db.VarChar(100)
+  movie      movie   @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MT_MV")
+  tags       tags    @relation(fields: [tags_id], references: [tags_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_MT_TA")
+
+  @@id([tags_id, movie_id])
+  @@index([movie_id], map: "FR_MT_MV")
+}
+
+model rate_movie {
+  user_id   Int
+  movie_id  Int
+  amount    Int
+  date_rate String? @db.VarChar(100)
+  movie     movie   @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_MOVIE_RATE")
+  user      user    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_USER_RATE")
+
+  @@id([user_id, movie_id])
+  @@index([movie_id], map: "FK_MOVIE_RATE")
+}
+
+model seat {
+  seat_id      Int            @id @default(autoincrement())
+  seat_name    String         @db.VarChar(400)
+  cinema_id    Int
+  seat_type_id String         @db.VarChar(100)
+  is_removed   Boolean?       @default(false)
+  created_at   String?        @db.VarChar(100)
+  updated_at   String?        @db.VarChar(100)
+  book_tickets book_tickets[]
+  cinema       cinema         @relation(fields: [cinema_id], references: [cinema_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_S_CINEMA")
+  seat_type    seat_type      @relation(fields: [seat_type_id], references: [seat_type_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_S_SEAT")
+
+  @@index([cinema_id], map: "FR_S_CINEMA")
+  @@index([seat_type_id], map: "FR_S_SEAT")
+}
+
+model seat_type {
+  seat_type_id   String   @id @db.VarChar(100)
+  seat_type_name String   @db.VarChar(400)
+  price          Float
+  is_removed     Boolean? @default(false)
+  created_at     String?  @db.VarChar(100)
+  updated_at     String?  @db.VarChar(100)
+  seat           seat[]
+}
+
+model show_times {
+  showtimes_id Int            @unique(map: "showtimes_id") @default(autoincrement())
+  cinema_id    Int
+  movie_id     Int
+  time         String         @db.VarChar(100)
+  is_removed   Boolean?       @default(false)
+  created_at   String?        @db.VarChar(100)
+  updated_at   String?        @db.VarChar(100)
+  book_tickets book_tickets[]
+  cinema       cinema         @relation(fields: [cinema_id], references: [cinema_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_ST_CINEMA")
+  movie        movie          @relation(fields: [movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_ST_MOVIE")
+
+  @@id([showtimes_id, cinema_id, movie_id])
+  @@index([cinema_id], map: "FR_ST_CINEMA")
+  @@index([movie_id], map: "FR_ST_MOVIE")
+}
+
+model tags {
+  tags_id    Int          @id @default(autoincrement())
+  tags_name  String       @db.VarChar(255)
+  is_removed Boolean?     @default(false)
+  created_at String?      @db.VarChar(100)
+  updated_at String?      @db.VarChar(100)
+  movie_tags movie_tags[]
+}
+
+model theater_system {
+  system_id           String           @id @db.VarChar(200)
+  theater_system_name String           @db.VarChar(300)
+  logo                String?          @db.LongText
+  is_removed          Boolean?         @default(false)
+  created_at          String?          @db.VarChar(100)
+  updated_at          String?          @db.VarChar(100)
+  cinema_cluster      cinema_cluster[]
+}
+
+model user {
+  user_id                             Int             @id @default(autoincrement())
+  account                             String          @unique(map: "account") @db.VarChar(255)
+  password                            String          @db.VarChar(300)
+  name                                String          @db.VarChar(255)
+  email                               String          @unique(map: "email") @db.VarChar(255)
+  mobile_no                           String          @db.Char(20)
+  gender                              Boolean?        @default(true)
+  avatar                              String?         @db.LongText
+  user_type                           String?         @db.VarChar(10)
+  is_removed                          Boolean?        @default(false)
+  is_blocked                          Boolean?        @default(false)
+  refresh_token                       String?         @db.VarChar(500)
+  password_change_at                  String?         @db.VarChar(500)
+  password_reset_token                String?         @db.VarChar(500)
+  password_reset_expires              String?         @db.VarChar(500)
+  created_at                          String?         @db.VarChar(100)
+  updated_at                          String?         @db.VarChar(100)
+  book_tickets                        book_tickets[]
+  comment_movie                       comment_movie[]
+  like_movie                          like_movie[]
+  rate_movie                          rate_movie[]
+  user_type_user_user_typeTouser_type user_type?      @relation("user_user_typeTouser_type", fields: [user_type], references: [user_type], onDelete: NoAction, onUpdate: NoAction, map: "FR_USER_TYPE")
+
+  @@index([user_type], map: "FR_USER_TYPE")
+}
+
+model user_type {
+  user_type                      String    @id @unique(map: "user_type") @db.VarChar(10)
+  type_name                      String    @db.VarChar(20)
+  is_removed                     Boolean?  @default(false)
+  created_at                     DateTime? @default(now()) @db.Timestamp(0)
+  user_user_user_typeTouser_type user[]    @relation("user_user_typeTouser_type")
+}
