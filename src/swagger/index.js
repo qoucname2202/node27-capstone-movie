@@ -58,6 +58,112 @@
 
 /**
  * @swagger
+ * /api/v1/users/all-users:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: query
+ *         name: keyword
+ *         type: string
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/user-types:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/pagination:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: query
+ *         name: keyword
+ *         type: string
+ *       - in: query
+ *         name: page
+ *         type: integer
+ *       - in: query
+ *         name: limit
+ *         type: integer
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/search:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: query
+ *         name: keyword
+ *         type: string
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/search-paging:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: query
+ *         name: keyword
+ *         type: string
+ *       - in: query
+ *         name: page
+ *         type: integer
+ *         default: 1
+ *       - in: query
+ *         name: limit
+ *         type: integer
+ *         default: 1
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/users/refresh-token:
  *  post:
  *      tags: [User]

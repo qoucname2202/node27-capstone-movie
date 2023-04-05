@@ -1,4 +1,8 @@
 const RessponseMessage = require('../constants/response')
+const validators = require('../middlewares/validation.middleware')
+const { PrismaClient } = require('@prisma/client')
+const model = new PrismaClient()
+const moment = require('moment')
 
 const movieController = {
   // Get banner movie
@@ -21,6 +25,51 @@ const movieController = {
   getAllMovie: async (req, res) => {
     try {
       return RessponseMessage.success(res, 'Successfully!', 'Get all movie successfully!')
+    } catch (err) {
+      RessponseMessage.error(res, 'Internal Server Error')
+    }
+  },
+  // Get pagination list of moivie
+  getPaginationListOfMovie: async (req, res) => {
+    try {
+      let { keyword, page, limit } = req.query
+      if (page) {
+        let movieLst = (await model.movie.findMany()).length
+        let pagingRes = await model.movie.findMany({
+          skip: (Number(page) - 1) * Number(limit),
+          take: Number(limit),
+          where: {
+            movie_name: {
+              contains: keyword || ''
+            }
+          },
+          select: {
+            movie_id: true,
+            movie_name: true
+          },
+          orderBy: {
+            movie_id: 'asc'
+          }
+        })
+        let paginationSchema = {
+          currentPage: Number(page),
+          count: Number(limit),
+          totalPages: Math.ceil(movieLst / Number(limit)),
+          totalCount: movieLst,
+          item: pagingRes
+        }
+        return RessponseMessage.success(res, paginationSchema, 'Successfully!')
+      } else {
+        let result = await model.movie.findMany({
+          select: {
+            movie_id: true,
+            movie_name: true
+          }
+        })
+        if (result) {
+          return RessponseMessage.success(res, result, 'Successfully!')
+        }
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

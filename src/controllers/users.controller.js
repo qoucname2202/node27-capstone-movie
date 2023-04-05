@@ -187,7 +187,27 @@ const userController = {
   // Get all users
   getAllUsers: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get all user successfully!')
+      let { keyword } = req.query
+      let result = await model.user.findMany({
+        where: {
+          name: {
+            contains: keyword || ''
+          }
+        },
+        select: {
+          user_id: true,
+          account: true,
+          email: true,
+          name: true,
+          mobile_no: true,
+          gender: true,
+          user_type: true,
+          avatar: true
+        }
+      })
+      if (result) {
+        return RessponseMessage.success(res, result, 'Successfully!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -195,7 +215,16 @@ const userController = {
   // Get all user type
   getAllUserType: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Sucessfully!', 'Get all user type scuccessfully!')
+      let result = await model.user_type.findMany({
+        select: {
+          user_type: true,
+          type_name: true,
+          created_at: true
+        }
+      })
+      if (result) {
+        return RessponseMessage.success(res, result, 'Successfully!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -203,7 +232,56 @@ const userController = {
   // Get pagination list of user
   getPaginationListOfUser: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get pagination list of user')
+      let { page, limit, keyword } = req.query
+      if (page) {
+        let usersLength = (await model.user.findMany()).length
+        let pagingRes = await model.user.findMany({
+          skip: (Number(page) - 1) * Number(limit),
+          take: Number(limit),
+          where: {
+            name: {
+              contains: keyword || ''
+            }
+          },
+          select: {
+            user_id: true,
+            account: true,
+            email: true,
+            name: true,
+            mobile_no: true,
+            gender: true,
+            user_type: true,
+            avatar: true
+          },
+          orderBy: {
+            user_id: 'asc'
+          }
+        })
+        let paginationSchema = {
+          currentPage: Number(page),
+          count: Number(limit),
+          totalPages: Math.ceil(usersLength / Number(limit)),
+          totalCount: usersLength,
+          item: pagingRes
+        }
+        return RessponseMessage.success(res, paginationSchema, 'Successfully!')
+      } else {
+        let result = await model.user.findMany({
+          select: {
+            user_id: true,
+            account: true,
+            email: true,
+            name: true,
+            mobile_no: true,
+            gender: true,
+            user_type: true,
+            avatar: true
+          }
+        })
+        if (result) {
+          return RessponseMessage.success(res, result, 'Successfully!')
+        }
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -211,7 +289,28 @@ const userController = {
   // Search user
   searchUser: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Search user')
+      let { keyword } = req.query
+      let result = await model.user.findMany({
+        where: {
+          name: {
+            contains: keyword || ''
+          }
+        },
+        select: {
+          user_id: true,
+          account: true,
+          email: true,
+          name: true,
+          mobile_no: true,
+          gender: true,
+          user_type: true,
+          avatar: true,
+          created_at: true
+        }
+      })
+      if (result) {
+        return RessponseMessage.success(res, result, 'Successfully!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -219,11 +318,60 @@ const userController = {
   // search user pagination
   searchUserPagination: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Search user pagination')
+      let { page, limit, keyword } = req.query
+      if (page) {
+        let pagingRes = await model.user.findMany({
+          skip: (Number(page) - 1) * Number(limit),
+          take: Number(limit),
+          where: {
+            name: {
+              contains: keyword || ''
+            }
+          },
+          select: {
+            user_id: true,
+            account: true,
+            email: true,
+            name: true,
+            mobile_no: true,
+            gender: true,
+            user_type: true,
+            avatar: true
+          },
+          orderBy: {
+            user_id: 'asc'
+          }
+        })
+        let paginationSchema = {
+          currentPage: Number(page),
+          count: Number(limit),
+          totalPages: Math.ceil(pagingRes.length / Number(limit)),
+          totalCount: pagingRes.length,
+          item: pagingRes
+        }
+        return RessponseMessage.success(res, paginationSchema, 'Successfully!')
+      } else {
+        let result = await model.user.findMany({
+          select: {
+            user_id: true,
+            account: true,
+            email: true,
+            name: true,
+            mobile_no: true,
+            gender: true,
+            user_type: true,
+            avatar: true
+          }
+        })
+        if (result) {
+          return RessponseMessage.success(res, result, 'Successfully!')
+        }
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
   },
+
   // get profile user
   getProfileUser: async (req, res) => {
     try {
