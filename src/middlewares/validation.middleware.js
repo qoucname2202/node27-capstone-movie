@@ -231,7 +231,7 @@ const validators = {
   },
   numberValidate: (data) => {
     const numberSchema = Joi.object({
-      image_id: Joi.number().integer().required().messages({
+      movie_id: Joi.number().integer().required().messages({
         'number.empty': ValidateMessage.ERROR_ID_NUMB.EMPTY,
         'number.base': ValidateMessage.ERROR_ID_NUMB.NUMB_FORMAT
       })

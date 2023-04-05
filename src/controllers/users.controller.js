@@ -660,50 +660,51 @@ const userController = {
   // like movie
   likeMovie: async (req, res) => {
     try {
-      // Get prod_id from header
-      let { movie_id } = req.query
-      let { authorization } = req.headers
-      let newToken = authorization.replace('Bearer ', '')
-      let { user_id } = checkAccessToken(newToken)
-      let checkValProd = Number(productId)
-      if (checkValProd) {
-        let isProd = await model.product.findUnique({
-          where: {
-            prod_id: Number(productId)
-          }
-        })
-        if (isProd) {
-          let isUserLike = await model.like_prod.findMany({
-            where: {
-              user_id: user_id,
-              prod_id: Number(productId)
-            }
-          })
-          if (isUserLike.length === 0) {
-            let modelLike = {
-              user_id,
-              prod_id: Number(productId),
-              date_like: moment().format()
-            }
-            let result = await model.like_prod.create({ data: modelLike })
-            if (result) {
-              return RessponseMessage.success(res, 'Like is successfully!', 'Successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          let { movie_id } = req.query
+          let { error } = await validators.numberValidate({ movie_id: Number(movie_id) })
+          if (!error) {
+            let movieExist = await model.movie.findUnique({
+              where: {
+                movie_id: Number(movie_id)
+              }
+            })
+            if (movieExist) {
+              let movieLikes = await model.like_movie.findMany({
+                where: {
+                  user_id: user_id,
+                  movie_id: Number(movie_id)
+                }
+              })
+              if (movieLikes.length === 0) {
+                let movieSchema = {
+                  user_id,
+                  movie_id: Number(movie_id),
+                  date_like: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+                }
+                let result = await model.like_movie.create({ data: movieSchema })
+                if (result) {
+                  return RessponseMessage.success(res, movieSchema, 'User has liked movie successfully!')
+                }
+              } else {
+                return RessponseMessage.badRequest(res, '', 'User has already liked movie!')
+              }
+            } else {
+              return RessponseMessage.badRequest(res, '', 'Movie does not exists!')
             }
           } else {
-            return RessponseMessage.badRequest(
-              res,
-              {
-                user_id,
-                prod_id: Number(productId)
-              },
-              'User already like product!'
-            )
+            return RessponseMessage.badRequest(res, '', error.details[0].message)
           }
         } else {
-          return RessponseMessage.badRequest(res, '', 'Product does not exist!')
+          return RessponseMessage.badRequest(res, '', 'User does not exists!')
         }
       } else {
-        return RessponseMessage.badRequest(res, '', 'Invalid product_id!')
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
       }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
@@ -712,7 +713,52 @@ const userController = {
   // Unlike movie
   unlikeMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Unlike movie successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          let { movie_id } = req.query
+          let { error } = await validators.numberValidate({ movie_id: Number(movie_id) })
+          if (!error) {
+            let movieExist = await model.movie.findUnique({
+              where: {
+                movie_id: Number(movie_id)
+              }
+            })
+            if (movieExist) {
+              let movieLikes = await model.like_movie.findMany({
+                where: {
+                  user_id: user_id,
+                  movie_id: Number(movie_id)
+                }
+              })
+              if (movieLikes.length > 0) {
+                let result = await model.like_movie.deleteMany({
+                  where: {
+                    user_id: user_id,
+                    movie_id: Number(movie_id)
+                  }
+                })
+                if (result) {
+                  return RessponseMessage.success(res, '', 'User has unliked movie successfully!')
+                }
+              } else {
+                return RessponseMessage.badRequest(res, '', 'User does not like movie!')
+              }
+            } else {
+              return RessponseMessage.badRequest(res, '', 'Movie does not exists!')
+            }
+          } else {
+            return RessponseMessage.badRequest(res, '', error.details[0].message)
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', 'User does not exists!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
