@@ -59,6 +59,15 @@ const validators = {
     })
     return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  forgotPassword: (data) => {
+    const userSchema = Joi.object({
+      email: Joi.string().email().required().messages({
+        'string.empty': ValidateMessage.ERROR_EMAIL.EMPTY,
+        'string.email': ValidateMessage.ERROR_EMAIL.EMAIL_FORMAT
+      })
+    })
+    return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
   resetPassword: (data) => {
     const userSchema = Joi.object({
       newPassword: Joi.string().min(8).pattern(regexPassword).required().messages({

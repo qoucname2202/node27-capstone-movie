@@ -4,6 +4,7 @@ const userRoute = express.Router()
 
 userRoute.get('/', userController.getAllUsers)
 userRoute.post('/test-token', userController.testToken)
+userRoute.post('/refresh-token', userController.refreshToken)
 userRoute.get('/forgot-password', userController.forgotPassword)
 userRoute.put('/reset-password', userController.resetPassword)
 userRoute.get('/user-types', userController.getAllUserType)

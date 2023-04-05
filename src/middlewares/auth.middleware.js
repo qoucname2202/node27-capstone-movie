@@ -17,6 +17,9 @@ const authMiddleware = {
   },
   checkRefreshToken: (refToken) => {
     return jwt.verify(refToken, refreshToken)
+  },
+  checkAccessToken: (token) => {
+    return jwt.verify(token, secretToken)
   }
 }
 module.exports = authMiddleware

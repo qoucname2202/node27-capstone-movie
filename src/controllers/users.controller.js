@@ -1,9 +1,72 @@
 const RessponseMessage = require('../constants/response')
+const validators = require('../middlewares/validation.middleware')
+const { PrismaClient } = require('@prisma/client')
+const model = new PrismaClient()
+const { refreshTokenName, urlServer } = require('../config')
+const {
+  generateRefreshToken,
+  generateToken,
+  checkRefreshToken,
+  checkAccessToken
+} = require('../middlewares/auth.middleware')
+const moment = require('moment')
+const crypto = require('crypto')
+const sendMail = require('../utils/email')
+const { hashPassword } = require('../utils/jwt')
+const { profileUser } = require('../utils/helpers')
+
 const userController = {
-  // Get all users
-  getAllUsers: async (req, res) => {
+  // Refresh token
+  refreshToken: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get all user successfully!')
+      const cookie = req.cookies
+      if (!cookie || !cookie.refreshToken) {
+        return RessponseMessage.badRequest(res, '', 'No refresh token in cookies!')
+      } else {
+        const userSchema = checkRefreshToken(cookie.refreshToken)
+        let result = await model.user.findUnique({
+          where: {
+            account: userSchema?.account
+          },
+          include: {
+            user_type_user_user_typeTouser_type: true
+          }
+        })
+        if (result) {
+          let { user_id, account, name, email, mobile_no, gender, user_type, type_name } = profileUser(result)
+          let newUserSchema = {
+            user_id,
+            account,
+            name,
+            email,
+            user_type
+          }
+          const newAccessToken = generateToken(newUserSchema)
+          const newRefreshToken = generateRefreshToken(newUserSchema)
+          await model.user.update({
+            where: {
+              account: userSchema?.account
+            },
+            data: {
+              refresh_token: newRefreshToken
+            }
+          })
+          res.cookie(refreshTokenName, newRefreshToken, {
+            httpOnly: true,
+            secure: false,
+            path: '/',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+          })
+          return RessponseMessage.success(
+            res,
+            { user_id, account, name, email, mobile_no, gender, user_type: type_name, newAccessToken },
+            'Refresh token successfully!'
+          )
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Refresh token not matched!')
+        }
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -11,7 +74,26 @@ const userController = {
   // Test token
   testToken: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Test token successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id, account, name, email, user_type, iat, exp } = userSchema
+          let infoToken = {
+            user_id,
+            account,
+            email,
+            name,
+            user_type,
+            iat: moment(iat * 1000).format(),
+            exp: moment(exp * 1000).format()
+          }
+          return RessponseMessage.success(res, infoToken, 'Successfully!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -19,7 +101,43 @@ const userController = {
   // Forgot-password
   forgotPassword: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Forgot-password!')
+      let { email } = req.query
+      let { error, value } = await validators.forgotPassword({ email })
+      if (!error) {
+        const userInfo = await model.user.findUnique({
+          where: {
+            email: value?.email
+          }
+        })
+        if (userInfo) {
+          const resetToken = crypto.randomBytes(32).toString('hex')
+          const passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+          const passwordResetExpires = moment(Date.now() + 15 * 60 * 1000).format()
+          await model.user.update({
+            where: {
+              email: value?.email
+            },
+            data: {
+              password_reset_token: passwordResetToken,
+              password_reset_expires: passwordResetExpires
+            }
+          })
+          const html = `Please click on the link below to change your password. This link will expire 15 minutes. <a href=${urlServer}/api/v1/users/reset-password/${resetToken}>Click here</a>`
+          const content = { email, html }
+          const result = await sendMail(content)
+          if (result) {
+            return RessponseMessage.success(
+              res,
+              'Please check your email again!',
+              'Send mail change password successfully!'
+            )
+          }
+        } else {
+          return RessponseMessage.notFound(res, '', 'User does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -27,7 +145,49 @@ const userController = {
   // Reset password
   resetPassword: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Reset-password successfully!')
+      let { error, value } = await validators.resetPassword(req.body)
+      if (!error) {
+        let { token } = value
+        const passwordResetToken = crypto.createHash('sha256').update(token).digest('hex')
+        const userInfo = await model.user.findFirst({
+          where: {
+            password_reset_token: passwordResetToken
+          }
+        })
+        if (userInfo) {
+          let { email } = userInfo
+          let result = await model.user.update({
+            where: {
+              email: email
+            },
+            data: {
+              password: hashPassword(value.newPassword),
+              password_reset_token: null,
+              password_reset_expires: null,
+              password_change_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+            }
+          })
+          if (result) {
+            return RessponseMessage.success(
+              res,
+              'Your password has been change. Please enter signin again!',
+              'Change password successfully!'
+            )
+          }
+        } else {
+          return RessponseMessage.notFound(res, '', 'Invalid reset token!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
+    } catch (err) {
+      RessponseMessage.error(res, 'Internal Server Error')
+    }
+  },
+  // Get all users
+  getAllUsers: async (req, res) => {
+    try {
+      return RessponseMessage.success(res, 'Successfully!', 'Get all user successfully!')
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
