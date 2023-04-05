@@ -9,9 +9,11 @@ const {
   checkRefreshToken,
   checkAccessToken
 } = require('../middlewares/auth.middleware')
+let fs = require('fs')
 const moment = require('moment')
 const crypto = require('crypto')
 const sendMail = require('../utils/email')
+const { updateAvatar } = require('../utils/file')
 const { hashPassword } = require('../utils/jwt')
 const { profileUser } = require('../utils/helpers')
 
@@ -439,7 +441,57 @@ const userController = {
   // Insert user
   insertUser: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Insert user successfully!')
+      let { error, value } = await validators.insertUserValidate(req.body)
+      if (!error) {
+        let checkAccount = await model.user.findUnique({
+          where: {
+            account: value?.account
+          }
+        })
+        if (!checkAccount) {
+          let checkEmail = await model.user.findUnique({
+            where: {
+              email: value?.email
+            }
+          })
+          if (!checkEmail) {
+            let { account, password, name, email, mobile_no, gender, user_type } = value
+            const passHash = hashPassword(password)
+            let userModel = {
+              account,
+              password: passHash,
+              name,
+              email,
+              mobile_no,
+              gender: gender === 'male' ? true : false,
+              user_type,
+              created_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+            }
+            let result = await model.user.create({ data: userModel })
+            if (result) {
+              return RessponseMessage.success(res, 'Successfully!', 'Insert user successfully!')
+            }
+          } else {
+            return RessponseMessage.conflict(
+              res,
+              {
+                email: value.email
+              },
+              'Email already exists'
+            )
+          }
+        } else {
+          return RessponseMessage.conflict(
+            res,
+            {
+              account: value.account
+            },
+            'Account already exists'
+          )
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -447,7 +499,44 @@ const userController = {
   // Update user
   updateUser: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Update user successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          let { error } = await validators.updateUserValidate(req.body)
+          if (!error) {
+            let { gender } = req.body
+            const result = await model.user.update({
+              where: {
+                user_id: user_id
+              },
+              data: {
+                ...req.body,
+                gender: gender === 'male' ? true : false,
+                updated_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+              },
+              select: {
+                user_id: true,
+                account: true,
+                name: true,
+                email: true,
+                mobile_no: true,
+                gender: true,
+                user_type: true,
+                created_at: true,
+                updated_at: true
+              }
+            })
+            return RessponseMessage.success(res, result, 'Update user successfully!')
+          } else {
+            return RessponseMessage.badRequest(res, '', error.details[0].message)
+          }
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'User does not exists!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -455,7 +544,59 @@ const userController = {
   // Update user by admin
   updateUserByAdmin: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Update user by admin successfully!')
+      let { account } = req.query
+      let checkAccount = await model.user.findUnique({
+        where: {
+          account: account
+        }
+      })
+      if (checkAccount) {
+        let { error, value } = await validators.updateAdminValidate(req.body)
+        if (!error) {
+          let { account, password, name, email, mobile_no, gender, user_type } = value
+          const passHash = hashPassword(password)
+          let userModel = {
+            account,
+            password: passHash,
+            name,
+            email,
+            mobile_no,
+            gender: gender === 'male' ? true : false,
+            user_type,
+            updated_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+          }
+          const result = await model.user.update({
+            where: {
+              account: req.query.account
+            },
+            data: userModel,
+            select: {
+              user_id: true,
+              account: true,
+              name: true,
+              email: true,
+              mobile_no: true,
+              gender: true,
+              user_type: true,
+              created_at: true,
+              updated_at: true
+            }
+          })
+          if (result) {
+            return RessponseMessage.success(res, result, 'Update user by admin successfully!')
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', error.details[0].message)
+        }
+      } else {
+        return RessponseMessage.conflict(
+          res,
+          {
+            account: account
+          },
+          'Account does not exists!'
+        )
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -463,7 +604,26 @@ const userController = {
   // Upload avatar
   uploadAvatar: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Upload avatar successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          if (!req.file) {
+            return RessponseMessage.badRequest(res, '', 'Invalid file format. should be png/jpg/jpeg/webp!')
+          } else {
+            fs.readFile(process.cwd() + '/public/img/' + req.file.filename, (err, data) => {
+              let fileName = `"data:${req.file.mimetype};base64,${Buffer.from(data).toString('base64')}"`
+              fs.unlinkSync(process.cwd() + '/public/img/' + req.file.filename)
+              let formatString = fileName.slice(1, fileName.length - 1)
+              updateAvatar(res, formatString, user_id)
+            })
+          }
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

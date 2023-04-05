@@ -88,6 +88,51 @@ const validators = {
     })
     return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  insertUserValidate: (data) => {
+    const userSchema = Joi.object({
+      account: Joi.string().min(3).max(10).required().messages({
+        'string.empty': ValidateMessage.ERROR_ACCOUNT.EMPTY,
+        'string.min': ValidateMessage.ERROR_ACCOUNT.MIN_LENGTH,
+        'string.max': ValidateMessage.ERROR_ACCOUNT.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_ACCOUNT.ACCOUNT_FORMAT
+      }),
+      password: Joi.string().min(8).pattern(regexPassword).required().messages({
+        'string.empty': ValidateMessage.ERROR_PASSWORD.EMPTY,
+        'string.min': ValidateMessage.ERROR_PASSWORD.LENGTH,
+        'string.pattern.base': ValidateMessage.ERROR_PASSWORD.PATTERN
+      }),
+      confirmPassword: Joi.any()
+        .equal(Joi.ref('password'))
+        .required()
+        .options({ messages: { 'any.only': 'Confirm password does not match!' } }),
+      name: Joi.string().min(3).max(30).required().messages({
+        'string.empty': ValidateMessage.ERROR_NAME.EMPTY,
+        'string.min': ValidateMessage.ERROR_NAME.MIN_LENGTH,
+        'string.max': ValidateMessage.ERROR_NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_NAME.NAME_FORMAT
+      }),
+      email: Joi.string().email().required().messages({
+        'string.empty': ValidateMessage.ERROR_EMAIL.EMPTY,
+        'string.email': ValidateMessage.ERROR_EMAIL.EMAIL_FORMAT
+      }),
+      mobile_no: Joi.string().max(10).pattern(regexPhoneNumber).required().messages({
+        'string.empty': ValidateMessage.ERROR_PHONE.EMPTY,
+        'string.max': ValidateMessage.ERROR_PHONE.MAX_LENGTH,
+        'string.pattern.base': ValidateMessage.ERROR_PHONE.PATTERN
+      }),
+      gender: Joi.string().valid('male', 'female').required().messages({
+        'string.empty': ValidateMessage.ERROR_GENDER.EMPTY,
+        'string.base': ValidateMessage.ERROR_GENDER.GENDER_FORMAT,
+        'any.only': ValidateMessage.ERROR_GENDER.GENDER_DIFF
+      }),
+      user_type: Joi.string().valid('USER', 'ADMIN').required().messages({
+        'string.empty': ValidateMessage.ERROR_USER_TYPE.EMPTY,
+        'string.base': ValidateMessage.ERROR_USER_TYPE.USER_TYPE_FORMAT,
+        'any.only': ValidateMessage.ERROR_USER_TYPE.USER_TYPE_DIFF
+      })
+    })
+    return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
   updateUserValidate: (data) => {
     const userSchema = Joi.object({
       name: Joi.string().min(3).max(30).required().messages({
@@ -96,9 +141,60 @@ const validators = {
         'string.max': ValidateMessage.ERROR_NAME.MAX_LENGTH,
         'string.base': ValidateMessage.ERROR_NAME.NAME_FORMAT
       }),
-      age: Joi.number().integer().required().messages({
-        'number.empty': ValidateMessage.ERROR_AGE.EMPTY,
-        'number.base': ValidateMessage.ERROR_AGE.AGE_FORMAT
+      email: Joi.string().email().required().messages({
+        'string.empty': ValidateMessage.ERROR_EMAIL.EMPTY,
+        'string.email': ValidateMessage.ERROR_EMAIL.EMAIL_FORMAT
+      }),
+      mobile_no: Joi.string().max(10).pattern(regexPhoneNumber).required().messages({
+        'string.empty': ValidateMessage.ERROR_PHONE.EMPTY,
+        'string.max': ValidateMessage.ERROR_PHONE.MAX_LENGTH,
+        'string.pattern.base': ValidateMessage.ERROR_PHONE.PATTERN
+      }),
+      gender: Joi.string().valid('male', 'female').required().messages({
+        'string.empty': ValidateMessage.ERROR_GENDER.EMPTY,
+        'string.base': ValidateMessage.ERROR_GENDER.GENDER_FORMAT,
+        'any.only': ValidateMessage.ERROR_GENDER.GENDER_DIFF
+      })
+    })
+    return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  updateAdminValidate: (data) => {
+    const userSchema = Joi.object({
+      account: Joi.string().min(3).max(10).required().messages({
+        'string.empty': ValidateMessage.ERROR_ACCOUNT.EMPTY,
+        'string.min': ValidateMessage.ERROR_ACCOUNT.MIN_LENGTH,
+        'string.max': ValidateMessage.ERROR_ACCOUNT.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_ACCOUNT.ACCOUNT_FORMAT
+      }),
+      password: Joi.string().min(8).pattern(regexPassword).required().messages({
+        'string.empty': ValidateMessage.ERROR_PASSWORD.EMPTY,
+        'string.min': ValidateMessage.ERROR_PASSWORD.LENGTH,
+        'string.pattern.base': ValidateMessage.ERROR_PASSWORD.PATTERN
+      }),
+      name: Joi.string().min(3).max(30).required().messages({
+        'string.empty': ValidateMessage.ERROR_NAME.EMPTY,
+        'string.min': ValidateMessage.ERROR_NAME.MIN_LENGTH,
+        'string.max': ValidateMessage.ERROR_NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_NAME.NAME_FORMAT
+      }),
+      email: Joi.string().email().required().messages({
+        'string.empty': ValidateMessage.ERROR_EMAIL.EMPTY,
+        'string.email': ValidateMessage.ERROR_EMAIL.EMAIL_FORMAT
+      }),
+      mobile_no: Joi.string().max(10).pattern(regexPhoneNumber).required().messages({
+        'string.empty': ValidateMessage.ERROR_PHONE.EMPTY,
+        'string.max': ValidateMessage.ERROR_PHONE.MAX_LENGTH,
+        'string.pattern.base': ValidateMessage.ERROR_PHONE.PATTERN
+      }),
+      gender: Joi.string().valid('male', 'female').required().messages({
+        'string.empty': ValidateMessage.ERROR_GENDER.EMPTY,
+        'string.base': ValidateMessage.ERROR_GENDER.GENDER_FORMAT,
+        'any.only': ValidateMessage.ERROR_GENDER.GENDER_DIFF
+      }),
+      user_type: Joi.string().valid('USER', 'ADMIN').required().messages({
+        'string.empty': ValidateMessage.ERROR_USER_TYPE.EMPTY,
+        'string.base': ValidateMessage.ERROR_USER_TYPE.USER_TYPE_FORMAT,
+        'any.only': ValidateMessage.ERROR_USER_TYPE.USER_TYPE_DIFF
       })
     })
     return userSchema.validate(data, { stripUnknown: true, abortEarly: false })

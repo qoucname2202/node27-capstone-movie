@@ -199,6 +199,130 @@
 
 /**
  * @swagger
+ * /api/v1/users/insert:
+ *  post:
+ *      tags: [User]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             account:
+ *               type: string
+ *             password:
+ *               type: string
+ *             confirmPassword:
+ *               type: string
+ *             name:
+ *               type: string
+ *             email:
+ *               type: string
+ *             mobile_no:
+ *               type: string
+ *             gender:
+ *               type: string
+ *             user_type:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/update:
+ *  put:
+ *      tags: [User]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             name:
+ *               type: string
+ *             email:
+ *               type: string
+ *             mobile_no:
+ *               type: string
+ *             gender:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/update-admin:
+ *  put:
+ *      tags: [User]
+ *      parameters:
+ *      - in: query
+ *        name: account
+ *        type: string
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             account:
+ *               type: string
+ *             password:
+ *               type: string
+ *             name:
+ *               type: string
+ *             email:
+ *               type: string
+ *             mobile_no:
+ *               type: string
+ *             gender:
+ *               type: string
+ *             user_type:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/upload-avatar:
+ *  post:
+ *      tags: [User]
+ *      consumes:
+ *         multipart/form-data
+ *      parameters:
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *       - in: formData
+ *         description: The uploaded file data
+ *         name: avatarURL
+ *         required: true
+ *         type: file
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/users/refresh-token:
  *  post:
  *      tags: [User]

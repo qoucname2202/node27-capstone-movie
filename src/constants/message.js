@@ -29,6 +29,11 @@ const ValidateMessage = {
     GENDER_FORMAT: 'Gender must be a string!',
     GENDER_DIFF: 'Gender must be male or female'
   },
+  ERROR_USER_TYPE: {
+    EMPTY: 'User type cannot be an empty field!',
+    USER_TYPE_FORMAT: 'User type must be a string!',
+    USER_TYPE_DIFF: 'User type must be USER or ADMIN'
+  },
   ERROR_ID_NUMB: {
     NUMB_FORMAT: 'Invalid field must be a number',
     EMPTY: 'Please can not be an empty field'
