@@ -14,6 +14,9 @@ const authMiddleware = {
     return jwt.sign({ user_id, account, name, email, user_type }, refreshToken, {
       expiresIn: `${Number(expriesRefreshToken)}d`
     })
+  },
+  checkRefreshToken: (refToken) => {
+    return jwt.verify(refToken, refreshToken)
   }
 }
 module.exports = authMiddleware

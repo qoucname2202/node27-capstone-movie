@@ -2,11 +2,12 @@ const RessponseMessage = require('../constants/response')
 const validators = require('../middlewares/validation.middleware')
 const { PrismaClient } = require('@prisma/client')
 const model = new PrismaClient()
+const HttpStatusCode = require('../constants/httpStatus')
 const { refreshTokenName } = require('../config')
 const { hashPassword, isCorrectPassword } = require('../utils/jwt')
 const moment = require('moment')
 const { profileUser } = require('../utils/helpers')
-const { generateRefreshToken, generateToken } = require('../middlewares/auth.middleware')
+const { generateRefreshToken, generateToken, checkRefreshToken } = require('../middlewares/auth.middleware')
 
 const authController = {
   signup: async (req, res) => {
@@ -137,7 +138,33 @@ const authController = {
   },
   signout: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Signout successfully!')
+      const cookie = req.cookies
+      const { refreshToken } = cookie
+      if (!cookie || !refreshToken) {
+        return RessponseMessage.badRequest(res, '', 'No refresh token in cookies!')
+      } else {
+        const userSchema = checkRefreshToken(refreshToken)
+        await model.user.update({
+          where: {
+            account: userSchema.account
+          },
+          data: {
+            refresh_token: null
+          }
+        })
+        return res
+          .status(200)
+          .clearCookie(refreshTokenName, {
+            httpOnly: true,
+            secure: true
+          })
+          .json({
+            statusCode: HttpStatusCode.OK,
+            message: 'Successfully!',
+            content: 'Signout successfully!',
+            dateTime: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+          })
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
