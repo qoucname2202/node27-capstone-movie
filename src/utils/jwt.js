@@ -8,6 +8,11 @@ const hashPassword = (pass) => {
   return bcrypt.hashSync(pass, Number(hashRounds))
 }
 
+const isCorrectPassword = (pass, hashPassword) => {
+  return bcrypt.compareSync(pass, hashPassword)
+}
+
 module.exports = {
-  hashPassword
+  hashPassword,
+  isCorrectPassword
 }
