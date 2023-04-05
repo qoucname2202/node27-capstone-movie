@@ -164,6 +164,41 @@
 
 /**
  * @swagger
+ * /api/v1/users/profile:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/account:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: query
+ *         name: keyword
+ *         type: string
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/users/refresh-token:
  *  post:
  *      tags: [User]

@@ -371,11 +371,37 @@ const userController = {
       RessponseMessage.error(res, 'Internal Server Error')
     }
   },
-
   // get profile user
   getProfileUser: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Profile user')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          const result = await model.user.findUnique({
+            where: {
+              user_id: user_id
+            },
+            select: {
+              user_id: true,
+              account: true,
+              email: true,
+              name: true,
+              mobile_no: true,
+              gender: true,
+              user_type: true,
+              avatar: true,
+              created_at: true,
+              updated_at: true
+            }
+          })
+          return RessponseMessage.success(res, result, 'Successfully!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -383,7 +409,29 @@ const userController = {
   // get info user
   getInfoUser: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get user info')
+      let { keyword } = req.query
+      let result = await model.user.findMany({
+        where: {
+          account: {
+            contains: keyword || ''
+          }
+        },
+        select: {
+          user_id: true,
+          account: true,
+          email: true,
+          name: true,
+          mobile_no: true,
+          gender: true,
+          user_type: true,
+          avatar: true,
+          created_at: true,
+          updated_at: true
+        }
+      })
+      if (result) {
+        return RessponseMessage.success(res, result, 'Successfully!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
