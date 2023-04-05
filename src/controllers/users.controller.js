@@ -631,7 +631,28 @@ const userController = {
   // Delete user
   deleteUser: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Delete user successfully!')
+      let { account } = req.query
+      let checkAccount = await model.user.findUnique({
+        where: {
+          account: account
+        }
+      })
+      if (checkAccount) {
+        await model.user.delete({
+          where: {
+            account: account
+          }
+        })
+        return RessponseMessage.success(res, '', 'Delete user successfully!')
+      } else {
+        return RessponseMessage.conflict(
+          res,
+          {
+            account: account
+          },
+          'Account does not exists!'
+        )
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -639,7 +660,51 @@ const userController = {
   // like movie
   likeMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Like movie successfully!')
+      // Get prod_id from header
+      let { movie_id } = req.query
+      let { authorization } = req.headers
+      let newToken = authorization.replace('Bearer ', '')
+      let { user_id } = checkAccessToken(newToken)
+      let checkValProd = Number(productId)
+      if (checkValProd) {
+        let isProd = await model.product.findUnique({
+          where: {
+            prod_id: Number(productId)
+          }
+        })
+        if (isProd) {
+          let isUserLike = await model.like_prod.findMany({
+            where: {
+              user_id: user_id,
+              prod_id: Number(productId)
+            }
+          })
+          if (isUserLike.length === 0) {
+            let modelLike = {
+              user_id,
+              prod_id: Number(productId),
+              date_like: moment().format()
+            }
+            let result = await model.like_prod.create({ data: modelLike })
+            if (result) {
+              return RessponseMessage.success(res, 'Like is successfully!', 'Successfully!')
+            }
+          } else {
+            return RessponseMessage.badRequest(
+              res,
+              {
+                user_id,
+                prod_id: Number(productId)
+              },
+              'User already like product!'
+            )
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Product does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Invalid product_id!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

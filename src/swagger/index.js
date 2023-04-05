@@ -300,6 +300,25 @@
 
 /**
  * @swagger
+ * /api/v1/users/delete:
+ *  delete:
+ *      tags: [User]
+ *      parameters:
+ *      - in: query
+ *        name: account
+ *        type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/users/upload-avatar:
  *  post:
  *      tags: [User]
