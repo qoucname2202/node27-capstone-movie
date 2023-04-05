@@ -357,6 +357,31 @@
 
 /**
  * @swagger
+ * /api/v1/users/rating:
+ *  post:
+ *      tags: [User]
+ *      parameters:
+ *      - in: query
+ *        name: movie_id
+ *        type: integer
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             amount:
+ *               type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/users/upload-avatar:
  *  post:
  *      tags: [User]

@@ -766,7 +766,69 @@ const userController = {
   // Rating movie
   ratingMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Rating movie successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          let { movie_id } = req.query
+          let { amount } = req.body
+          let { error, value } = await validators.ratingValidate({ movie_id: Number(movie_id), amount })
+          if (!error) {
+            let movieExist = await model.movie.findUnique({
+              where: {
+                movie_id: Number(movie_id)
+              }
+            })
+            if (movieExist) {
+              let movieRates = await model.rate_movie.findMany({
+                where: {
+                  user_id: user_id,
+                  movie_id: Number(movie_id)
+                }
+              })
+              if (movieRates.length === 0) {
+                let movieRateSchema = {
+                  user_id,
+                  movie_id: Number(movie_id),
+                  amount: Number(value.amount),
+                  date_rate: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+                }
+                let result = await model.rate_movie.create({ data: movieRateSchema })
+                if (result) {
+                  return RessponseMessage.success(res, movieRateSchema, 'User has rated movie successfully!')
+                }
+              } else {
+                let movieRateSchema = {
+                  user_id,
+                  movie_id: Number(movie_id),
+                  amount: Number(value.amount),
+                  date_rate: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+                }
+                let result = await model.rate_movie.updateMany({
+                  where: {
+                    user_id: user_id,
+                    movie_id: Number(movie_id)
+                  },
+                  data: movieRateSchema
+                })
+                if (result) {
+                  return RessponseMessage.success(res, movieRateSchema, 'Update rated movie successfully!')
+                }
+              }
+            } else {
+              return RessponseMessage.badRequest(res, '', 'Movie does not exists!')
+            }
+          } else {
+            return RessponseMessage.badRequest(res, '', error.details[0].message)
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', 'User does not exists!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

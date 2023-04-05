@@ -238,6 +238,21 @@ const validators = {
     })
     return numberSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  ratingValidate: (data) => {
+    const numberSchema = Joi.object({
+      movie_id: Joi.number().integer().required().messages({
+        'number.empty': ValidateMessage.ERROR_ID_NUMB.EMPTY,
+        'number.base': ValidateMessage.ERROR_ID_NUMB.NUMB_FORMAT
+      }),
+      amount: Joi.number().integer().min(1).max(5).required().messages({
+        'number.empty': ValidateMessage.ERROR_AMOUNT.EMPTY,
+        'number.base': ValidateMessage.ERROR_AMOUNT.AMOUNT_FORMAT,
+        'number.min': ValidateMessage.ERROR_AMOUNT.MIN_LENGTH,
+        'number.max': ValidateMessage.ERROR_AMOUNT.MAX_LENGTH
+      })
+    })
+    return numberSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
   imageValidate: (data) => {
     const imageSchema = Joi.object({
       image_name: Joi.string().min(3).max(40).required().messages({

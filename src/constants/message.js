@@ -44,6 +44,12 @@ const ValidateMessage = {
     MAX_LENGTH: 'The length of the parameter must be a string with a maximum 30',
     NAME_FORMAT: 'Name must be a string'
   },
+  ERROR_AMOUNT: {
+    EMPTY: 'Amount cannot be an empty field',
+    MIN_LENGTH: 'The length of amount should be more than 1 character',
+    MAX_LENGTH: 'The length of amount must be a string with a maximum 5',
+    AMOUNT_FORMAT: 'Amount must be a number'
+  },
   ERROR_IMAGE_NAME: {
     EMPTY: 'Image name cannot be an empty field',
     MIN_LENGTH: 'The length of the parameter should be more than 3 character',
