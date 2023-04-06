@@ -15,6 +15,49 @@ const helpers = {
       type_name
     }
     return userSchema
+  },
+  movieLikeLst: (detailsLikeLst) => {
+    let likeLstNew = []
+    detailsLikeLst.forEach((item) => {
+      let { movie, date_like } = item
+      let { movie_id, movie_name, alias, trailer, poster, runtime, release_date } = movie
+      let newMovieSchema = {
+        movie_id,
+        movie_details: {
+          movie_name,
+          alias,
+          trailer,
+          poster,
+          runtime,
+          release_date
+        },
+        date_like
+      }
+      likeLstNew.push(newMovieSchema)
+    })
+    return likeLstNew
+  },
+  movieRatingLst: (detailsRatingLst) => {
+    let ratingLstNew = []
+    detailsRatingLst.forEach((item) => {
+      let { amount, movie, date_rate } = item
+      let { movie_id, movie_name, alias, trailer, poster, runtime, release_date } = movie
+      let newMovieSchema = {
+        movie_id,
+        amount,
+        movie_details: {
+          movie_name,
+          alias,
+          trailer,
+          poster,
+          runtime,
+          release_date
+        },
+        date_rate
+      }
+      ratingLstNew.push(newMovieSchema)
+    })
+    return ratingLstNew
   }
 }
 module.exports = helpers

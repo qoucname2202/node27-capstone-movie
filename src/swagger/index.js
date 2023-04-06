@@ -199,6 +199,83 @@
 
 /**
  * @swagger
+ * /api/v1/users/movie-favorite:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/movie-rating:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/forgot-password:
+ *  get:
+ *      tags: [User]
+ *      parameters:
+ *       - in: query
+ *         name: email
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/refresh-token:
+ *  post:
+ *      tags: [User]
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/users/reset-password:
+ *  put:
+ *      tags: [User]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             newPassword:
+ *               type: string
+ *             confirmNewPassword:
+ *               type: string
+ *             token:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/users/insert:
  *  post:
  *      tags: [User]
@@ -398,51 +475,6 @@
  *         name: avatarURL
  *         required: true
  *         type: file
- *      responses:
- *          200:
- *              description: success
- */
-
-/**
- * @swagger
- * /api/v1/users/refresh-token:
- *  post:
- *      tags: [User]
- *      responses:
- *          200:
- *              description: success
- */
-
-/**
- * @swagger
- * /api/v1/users/forgot-password:
- *  get:
- *      tags: [User]
- *      parameters:
- *       - in: query
- *         name: email
- *         type: string
- *      responses:
- *          200:
- *              description: success
- */
-
-/**
- * @swagger
- * /api/v1/users/reset-password:
- *  put:
- *      tags: [User]
- *      parameters:
- *      - in: body
- *        name: model
- *        schema:
- *           properties:
- *             newPassword:
- *               type: string
- *             confirmNewPassword:
- *               type: string
- *             token:
- *               type: string
  *      responses:
  *          200:
  *              description: success

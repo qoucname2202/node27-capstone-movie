@@ -23,7 +23,7 @@ userRoute.delete('/delete', verifyAdmin, userController.deleteUser)
 userRoute.post('/like', verifyToken, userController.likeMovie)
 userRoute.post('/unlike', verifyToken, userController.unlikeMovie)
 userRoute.post('/rating', verifyToken, userController.ratingMovie)
-userRoute.get('/movie-favorite', userController.getAllMovieFavorite)
-userRoute.get('/movie-rating', userController.getAllMovieRating)
+userRoute.get('/movie-favorite', verifyToken, userController.getAllMovieFavorite)
+userRoute.get('/movie-rating', verifyToken, userController.getAllMovieRating)
 
 module.exports = userRoute

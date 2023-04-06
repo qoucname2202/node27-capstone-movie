@@ -15,7 +15,7 @@ const crypto = require('crypto')
 const sendMail = require('../utils/email')
 const { updateAvatar } = require('../utils/file')
 const { hashPassword } = require('../utils/jwt')
-const { profileUser } = require('../utils/helpers')
+const { profileUser, movieLikeLst, movieRatingLst } = require('../utils/helpers')
 
 const userController = {
   // Refresh token
@@ -836,7 +836,28 @@ const userController = {
   // Get all movie favorite
   getAllMovieFavorite: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get all movie favorite successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          let likeLst = await model.like_movie.findMany({
+            where: {
+              user_id: user_id
+            },
+            include: {
+              movie: true
+            }
+          })
+          let result = movieLikeLst(likeLst)
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'User does not exists!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -844,7 +865,28 @@ const userController = {
   // Get all movie rating
   getAllMovieRating: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get all movie rating successfully!')
+      if (req?.headers?.authorization?.startsWith('Bearer')) {
+        const { authorization } = req.headers
+        let newToken = authorization.replace('Bearer ', '')
+        let userSchema = checkAccessToken(newToken)
+        if (userSchema) {
+          let { user_id } = userSchema
+          let ratingLst = await model.rate_movie.findMany({
+            where: {
+              user_id: user_id
+            },
+            include: {
+              movie: true
+            }
+          })
+          let result = movieRatingLst(ratingLst)
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'User does not exists!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Required Authentication!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
