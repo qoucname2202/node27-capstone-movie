@@ -58,7 +58,7 @@
 
 /**
  * @swagger
- * /api/v1/users/all-users:
+ * /api/v1/users/all-user:
  *  get:
  *      tags: [User]
  *      parameters:
@@ -491,6 +491,64 @@
  *         name: Authorization
  *         required: true
  *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/banner:
+ *  get:
+ *      tags: [Movie]
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/search:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *       - in: query
+ *         name: movie_name
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/all-movie:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *       - in: query
+ *         name: movie_name
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/pagination:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *       - in: query
+ *         name: keyword
+ *         type: string
+ *       - in: query
+ *         name: page
+ *         type: integer
+ *       - in: query
+ *         name: limit
+ *         type: integer
  *      responses:
  *          200:
  *              description: success

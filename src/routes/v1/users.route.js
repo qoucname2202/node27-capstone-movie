@@ -4,7 +4,7 @@ const { verifyAdmin, verifyToken } = require('../../middlewares/users.middleware
 const upload = require('../../middlewares/upload.middleware')
 const userRoute = express.Router()
 
-userRoute.get('/all-users', verifyAdmin, userController.getAllUsers)
+userRoute.get('/all-user', verifyAdmin, userController.getAllUsers)
 userRoute.post('/test-token', userController.testToken)
 userRoute.post('/refresh-token', userController.refreshToken)
 userRoute.get('/forgot-password', userController.forgotPassword)

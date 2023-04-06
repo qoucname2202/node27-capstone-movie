@@ -4,7 +4,7 @@ const movieRoute = express.Router()
 
 movieRoute.get('/banner', movieController.getAllBanner)
 movieRoute.get('/search', movieController.searchMovie)
-movieRoute.get('/', movieController.getAllMovie)
+movieRoute.get('/all-movie', movieController.getAllMovie)
 movieRoute.get('/pagination', movieController.getPaginationListOfMovie)
 movieRoute.get('/users-like', movieController.getUsersLikeMovie)
 movieRoute.get('/users-rating', movieController.getUsersRatingMovie)

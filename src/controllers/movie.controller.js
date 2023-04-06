@@ -2,13 +2,24 @@ const RessponseMessage = require('../constants/response')
 const validators = require('../middlewares/validation.middleware')
 const { PrismaClient } = require('@prisma/client')
 const model = new PrismaClient()
+
 const moment = require('moment')
 
 const movieController = {
   // Get banner movie
   getAllBanner: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get banner successfully!')
+      let bannerLst = await model.banner.findMany()
+      let result = bannerLst.map((item) => {
+        let { id, image, movie_id, created_at } = item
+        return {
+          banner_id: id,
+          movie_id,
+          image,
+          created_at
+        }
+      })
+      return RessponseMessage.success(res, result, 'Get banner successfully!')
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -16,7 +27,17 @@ const movieController = {
   // Search movie
   searchMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Search movie successfully!')
+      let { movie_name } = req.query
+      let result = await model.movie.findMany({
+        where: {
+          movie_name: {
+            contains: movie_name || ''
+          }
+        }
+      })
+      if (result) {
+        return RessponseMessage.success(res, result, 'Successfully!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -24,7 +45,24 @@ const movieController = {
   // Get all movie
   getAllMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get all movie successfully!')
+      let { movie_name } = req.query
+      let movieLst = await model.movie.findMany({
+        where: {
+          movie_name: {
+            contains: movie_name || ''
+          }
+        },
+        include: {
+          age_type: true
+        }
+      })
+      let result = movieLst.map((movieItem) => {
+        let { age_type, ...orther } = movieItem
+        let { age_type_name, description } = age_type
+        let { age_id, updated_at, is_removed, ...movie } = orther
+        return { ...movie, age_type: age_type_name, age_type_desc: description }
+      })
+      return RessponseMessage.success(res, result, 'Get all movie successfully!')
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -32,43 +70,81 @@ const movieController = {
   // Get pagination list of moivie
   getPaginationListOfMovie: async (req, res) => {
     try {
-      let { keyword, page, limit } = req.query
+      let { movie_name, page, limit } = req.query
       if (page) {
-        let movieLst = (await model.movie.findMany()).length
-        let pagingRes = await model.movie.findMany({
-          skip: (Number(page) - 1) * Number(limit),
-          take: Number(limit),
-          where: {
-            movie_name: {
-              contains: keyword || ''
+        if (movie_name !== '') {
+          let sliceMovies = await model.movie.findMany({
+            skip: (Number(page) - 1) * Number(limit),
+            take: Number(limit),
+            where: {
+              movie_name: {
+                contains: movie_name || ''
+              }
+            },
+            include: {
+              age_type: true
+            },
+            orderBy: {
+              movie_id: 'asc'
             }
-          },
-          select: {
-            movie_id: true,
-            movie_name: true
-          },
-          orderBy: {
-            movie_id: 'asc'
+          })
+          let result = sliceMovies.map((movieItem) => {
+            let { age_type, ...orther } = movieItem
+            let { age_type_name, description } = age_type
+            let { age_id, updated_at, is_removed, short_desc, backdrops, ...movie } = orther
+            return { ...movie, age_type: age_type_name, age_type_desc: description }
+          })
+          let paginationSchema = {
+            currentPage: Number(page),
+            count: sliceMovies.length <= Number(limit) ? sliceMovies.length : Number(limit),
+            totalPages:
+              Math.ceil(
+                sliceMovies.length / (sliceMovies.length <= Number(limit) ? sliceMovies.length : Number(limit))
+              ) + 1,
+            totalCount: sliceMovies.length,
+            item: result
           }
-        })
-        let paginationSchema = {
-          currentPage: Number(page),
-          count: Number(limit),
-          totalPages: Math.ceil(movieLst / Number(limit)),
-          totalCount: movieLst,
-          item: pagingRes
+          return RessponseMessage.success(res, paginationSchema, 'Successfully!')
+        } else {
+          let movieLst = (await model.movie.findMany()).length
+          let sliceMovies = await model.movie.findMany({
+            skip: (Number(page) - 1) * Number(limit),
+            take: Number(limit),
+            include: {
+              age_type: true
+            },
+            orderBy: {
+              movie_id: 'asc'
+            }
+          })
+          let result = sliceMovies.map((movieItem) => {
+            let { age_type, ...orther } = movieItem
+            let { age_type_name, description } = age_type
+            let { age_id, updated_at, is_removed, short_desc, backdrops, ...movie } = orther
+            return { ...movie, age_type: age_type_name, age_type_desc: description }
+          })
+          let paginationSchema = {
+            currentPage: Number(page),
+            count: Number(limit),
+            totalPages: Math.ceil(movieLst / Number(limit)),
+            totalCount: movieLst,
+            item: result
+          }
+          return RessponseMessage.success(res, paginationSchema, 'Successfully!')
         }
-        return RessponseMessage.success(res, paginationSchema, 'Successfully!')
       } else {
-        let result = await model.movie.findMany({
-          select: {
-            movie_id: true,
-            movie_name: true
+        let movieLst = await model.movie.findMany({
+          include: {
+            age_type: true
           }
         })
-        if (result) {
-          return RessponseMessage.success(res, result, 'Successfully!')
-        }
+        let result = movieLst.map((movieItem) => {
+          let { age_type, ...orther } = movieItem
+          let { age_type_name, description } = age_type
+          let { age_id, updated_at, is_removed, short_desc, backdrops, ...movie } = orther
+          return { ...movie, age_type: age_type_name, age_type_desc: description }
+        })
+        return RessponseMessage.success(res, result, 'Successfully!')
       }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
