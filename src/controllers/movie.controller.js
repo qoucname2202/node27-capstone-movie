@@ -2,8 +2,9 @@ const RessponseMessage = require('../constants/response')
 const validators = require('../middlewares/validation.middleware')
 const { PrismaClient } = require('@prisma/client')
 const model = new PrismaClient()
-
+const { checkAccessToken } = require('../middlewares/auth.middleware')
 const moment = require('moment')
+const { profileUserLike, profileUserRating } = require('../utils/helpers')
 
 const movieController = {
   // Get banner movie
@@ -153,7 +154,31 @@ const movieController = {
   // Get all user like movie
   getUsersLikeMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get all user like movie successfully!')
+      let { movie_id } = req.query
+      let { error, value } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: value?.movie_id
+          }
+        })
+        if (movieExist) {
+          let detailsMovieLikes = await model.like_movie.findMany({
+            where: {
+              movie_id: value?.movie_id
+            },
+            include: {
+              user: true
+            }
+          })
+          let result = profileUserLike(detailsMovieLikes)
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -161,7 +186,31 @@ const movieController = {
   // Get all user rating movie
   getUsersRatingMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get all user rating movie successfully!')
+      let { movie_id } = req.query
+      let { error, value } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: value?.movie_id
+          }
+        })
+        if (movieExist) {
+          let detailsMovieRates = await model.rate_movie.findMany({
+            where: {
+              movie_id: value?.movie_id
+            },
+            include: {
+              user: true
+            }
+          })
+          let result = profileUserRating(detailsMovieRates)
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

@@ -58,6 +58,47 @@ const helpers = {
       ratingLstNew.push(newMovieSchema)
     })
     return ratingLstNew
+  },
+  profileUserLike: (likeLst) => {
+    return likeLst.map((item) => {
+      let { user_id, date_like, user } = item
+      let { account, name, email, mobile_no, gender, user_type, avatar, created_at } = user
+      return {
+        user_id,
+        profile: {
+          account,
+          name,
+          email,
+          mobile_no,
+          gender: gender === true ? 'male' : 'female',
+          user_type: user_type === 'USER' ? 'Người dùng' : 'Người Quản Trị',
+          avatar,
+          created_at
+        },
+        date_like
+      }
+    })
+  },
+  profileUserRating: (rateLst) => {
+    return rateLst.map((item) => {
+      let { user_id, date_rate, amount, user } = item
+      let { account, name, email, mobile_no, gender, user_type, avatar, created_at } = user
+      return {
+        user_id,
+        amount,
+        profile: {
+          account,
+          name,
+          email,
+          mobile_no,
+          gender: gender === true ? 'male' : 'female',
+          user_type: user_type === 'USER' ? 'Người dùng' : 'Người Quản Trị',
+          avatar,
+          created_at
+        },
+        date_rate
+      }
+    })
   }
 }
 module.exports = helpers

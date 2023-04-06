@@ -553,3 +553,41 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/movies/users-like:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *      - in: query
+ *        name: movie_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/users-rating:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *      - in: query
+ *        name: movie_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
