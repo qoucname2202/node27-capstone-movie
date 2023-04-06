@@ -383,7 +383,40 @@ const movieController = {
   // Get list director movie_id
   getListDirector: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get lst director successfully!')
+      let { movie_id } = req.query
+      let { error } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: Number(movie_id)
+          }
+        })
+        if (movieExist) {
+          let dirList = await model.movie_director.findMany({
+            where: {
+              movie_id: Number(movie_id)
+            },
+            include: {
+              director: true
+            }
+          })
+          let result = dirList.map((item) => {
+            let { role, director } = item
+            let { dir_id, dir_name, created_at } = director
+            return {
+              dir_id,
+              dir_name,
+              role,
+              created_at
+            }
+          })
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -391,7 +424,31 @@ const movieController = {
   // Get list actor by movie_id
   getListActor: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get list actor successfully!')
+      let { movie_id } = req.query
+      let { error } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: Number(movie_id)
+          }
+        })
+        if (movieExist) {
+          let actLst = await model.movie_cast.findMany({
+            where: {
+              movie_id: Number(movie_id)
+            },
+            include: {
+              actor: true
+            }
+          })
+          console.log(actLst)
+          // return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -399,7 +456,34 @@ const movieController = {
   // Get all genres by movie_id
   getListGenres: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get list genres successfully!')
+      let { movie_id } = req.query
+      let { error } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: Number(movie_id)
+          }
+        })
+        if (movieExist) {
+          let genresLst = await model.movie_genres.findMany({
+            where: {
+              movie_id: Number(movie_id)
+            },
+            include: {
+              genres: true
+            }
+          })
+          let result = genresLst.map((item) => {
+            let { is_removed, updated_at, ...orther } = item.genres
+            return { ...orther }
+          })
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -407,7 +491,34 @@ const movieController = {
   // Get all tags by movie_id
   getListTags: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get list tags successfully!')
+      let { movie_id } = req.query
+      let { error } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: Number(movie_id)
+          }
+        })
+        if (movieExist) {
+          let tagsLst = await model.movie_tags.findMany({
+            where: {
+              movie_id: Number(movie_id)
+            },
+            include: {
+              tags: true
+            }
+          })
+          let result = tagsLst.map((item) => {
+            let { is_removed, updated_at, ...orther } = item.tags
+            return { ...orther }
+          })
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

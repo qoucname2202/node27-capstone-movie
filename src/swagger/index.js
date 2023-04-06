@@ -616,6 +616,48 @@
 
 /**
  * @swagger
+ * /api/v1/movies/directors:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *       - in: query
+ *         name: movie_id
+ *         type: integer
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/genres:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *       - in: query
+ *         name: movie_id
+ *         type: integer
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/tags:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *       - in: query
+ *         name: movie_id
+ *         type: integer
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/movies/upload-poster:
  *  post:
  *      tags: [Movie]
@@ -666,6 +708,25 @@
  *               type: string
  *             now_showing:
  *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/delete:
+ *  delete:
+ *      tags: [Movie]
+ *      parameters:
+ *      - in: query
+ *        name: movie_id
+ *        type: integer
  *      - in: header
  *        description: Please enter Bearer [token]
  *        name: Authorization
