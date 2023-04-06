@@ -139,23 +139,23 @@ model movie {
   trailer        String           @db.VarChar(255)
   short_desc     String?          @db.LongText
   overview       String           @db.LongText
-  poster         String           @db.LongText
+  poster         String?          @db.LongText
   backdrops      String?          @db.LongText
   runtime        Int?
   country        String?          @db.VarChar(255)
   language       String?          @db.VarChar(255)
-  age_id         Int?
+  age_id         Int
   release_date   String?          @db.VarChar(100)
   hot            Boolean?         @default(false)
-  comming_soon   Boolean?         @default(false)
-  now_showing    Boolean?         @default(false)
+  comming_soon   Boolean          @default(false)
+  now_showing    Boolean          @default(false)
   is_removed     Boolean?         @default(false)
   created_at     String?          @db.VarChar(100)
   updated_at     String?          @db.VarChar(100)
   banner         banner[]
   comment_movie  comment_movie[]
   like_movie     like_movie[]
-  age_type       age_type?        @relation(fields: [age_id], references: [age_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_AGE")
+  age_type       age_type         @relation(fields: [age_id], references: [age_id], onDelete: NoAction, onUpdate: NoAction, map: "FR_AGE")
   movie_cast     movie_cast[]
   movie_director movie_director[]
   movie_genres   movie_genres[]

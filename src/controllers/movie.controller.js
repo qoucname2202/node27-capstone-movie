@@ -8,6 +8,7 @@ const { profileUserLike, profileUserRating, getDatesInRange } = require('../util
 const validateDate = require('validate-date')
 const { uploadPoster } = require('../utils/file')
 const fs = require('fs')
+let slugify = require('slugify')
 
 const movieController = {
   // Get banner movie
@@ -301,7 +302,41 @@ const movieController = {
     try {
       let { error, value } = await validators.insertMovieValidate(req.body)
       if (!error) {
-        console.log(value)
+        let ageExist = await model.age_type.findUnique({
+          where: {
+            age_id: Number(value?.age_id)
+          }
+        })
+        if (ageExist) {
+          let { comming_soon, now_showing, movie_name, release_date, trailer, overview, runtime, age_id } = value
+          if (comming_soon && now_showing) {
+            return RessponseMessage.badRequest(
+              res,
+              '',
+              'If comming_soon is true, then now_showing must be false, and vice versa'
+            )
+          } else {
+            let alias = slugify(movie_name, { replacement: '-', remove: undefined, lower: true, trim: true })
+            let dateFormat = moment(release_date).format('DD/MM/YYYY')
+            let movieSchema = {
+              movie_name,
+              alias,
+              trailer,
+              overview,
+              runtime: Number(runtime),
+              age_id: Number(age_id),
+              release_date: dateFormat,
+              hot: false,
+              comming_soon,
+              now_showing,
+              created_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+            }
+            let result = await model.movie.create({ data: movieSchema })
+            return RessponseMessage.success(res, result, 'Create movie successfully!')
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Age_type does not exists!')
+        }
       } else {
         return RessponseMessage.badRequest(res, '', error.details[0].message)
       }
@@ -320,7 +355,27 @@ const movieController = {
   // Delete mobie
   deleteMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Delete movie successfully!')
+      let { movie_id } = req.query
+      let { error } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: Number(movie_id)
+          }
+        })
+        if (movieExist) {
+          await model.movie.deleteMany({
+            where: {
+              movie_id: Number(movie_id)
+            }
+          })
+          return RessponseMessage.success(res, '', 'Delete movie successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

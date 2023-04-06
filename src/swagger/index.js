@@ -639,3 +639,39 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/movies/insert:
+ *  post:
+ *      tags: [Movie]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             movie_name:
+ *               type: string
+ *             trailer:
+ *               type: string
+ *             overview:
+ *               type: string
+ *             runtime:
+ *               type: number
+ *             age_id:
+ *               type: number
+ *             release_date:
+ *               type: string
+ *             comming_soon:
+ *               type: string
+ *             now_showing:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */

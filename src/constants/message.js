@@ -91,16 +91,20 @@ const ValidateMessage = {
       EMPTY: 'Trailer cannot be an empty field',
       FORMAT: 'Trailer must be a string'
     },
+    OVERVIEW: {
+      EMPTY: 'Overview cannot be an empty field',
+      FORMAT: 'Overview must be a string'
+    },
     RUNTIMES: {
       EMPTY: 'Runtimes cannot be an empty field',
       MIN_LENGTH: 'Runtimes must be greater or equal to 1',
       MAX_LENGTH: 'Runtimes must be less or equal to 240',
       FORMAT: 'Runtimes must be a number'
     },
-    AGE_TYPE: {
-      EMPTY: 'Age_type cannot be an empty field',
-      MIN_LENGTH: 'Age_type must be greater or equal to 1',
-      FORMAT: 'Age_type must be a number'
+    AGE_ID: {
+      EMPTY: 'Age_id cannot be an empty field',
+      MIN_LENGTH: 'Age_id must be greater or equal to 1',
+      FORMAT: 'Age_id must be a number'
     },
     REALEASE_DATE: {
       BASE: 'Release_date must be a valid date'

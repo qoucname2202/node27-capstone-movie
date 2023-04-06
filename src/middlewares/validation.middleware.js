@@ -264,16 +264,20 @@ const validators = {
         'string.empty': ValidateMessage.ERROR_MOVIE.TRAILER.EMPTY,
         'string.base': ValidateMessage.ERROR_MOVIE.TRAILER.FORMAT
       }),
+      overview: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.OVERVIEW.EMPTY,
+        'string.base': ValidateMessage.ERROR_MOVIE.OVERVIEW.FORMAT
+      }),
       runtime: Joi.number().integer().min(1).max(240).required().messages({
         'number.empty': ValidateMessage.ERROR_MOVIE.RUNTIMES.EMPTY,
         'number.base': ValidateMessage.ERROR_MOVIE.RUNTIMES.FORMAT,
         'number.min': ValidateMessage.ERROR_MOVIE.RUNTIMES.MIN_LENGTH,
         'number.max': ValidateMessage.ERROR_MOVIE.RUNTIMES.MAX_LENGTH
       }),
-      age_type: Joi.number().integer().min(1).required().messages({
-        'number.empty': ValidateMessage.ERROR_MOVIE.AGE_TYPE.EMPTY,
-        'number.base': ValidateMessage.ERROR_MOVIE.AGE_TYPE.FORMAT,
-        'number.min': ValidateMessage.ERROR_MOVIE.AGE_TYPE.MIN_LENGTH
+      age_id: Joi.number().integer().min(1).required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.AGE_ID.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.AGE_ID.FORMAT,
+        'number.min': ValidateMessage.ERROR_MOVIE.AGE_ID.MIN_LENGTH
       }),
       release_date: Joi.date().required().messages({
         'date.base': ValidateMessage.ERROR_MOVIE.REALEASE_DATE.BASE
