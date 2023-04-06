@@ -17,6 +17,20 @@ const file = {
     if (result) {
       return RessponseMessage.success(res, '', 'Upload avatar successfully!')
     }
+  },
+  uploadPoster: async (res, posterURL, movie_id) => {
+    let result = await model.movie.update({
+      where: {
+        movie_id: Number(movie_id)
+      },
+      data: {
+        poster: posterURL,
+        updated_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+      }
+    })
+    if (result) {
+      return RessponseMessage.success(res, '', 'Upload poster successfully!')
+    }
   }
 }
 

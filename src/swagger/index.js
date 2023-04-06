@@ -591,3 +591,51 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/movies/paging-movie-by-date:
+ *  get:
+ *      tags: [Movie]
+ *      parameters:
+ *       - in: query
+ *         name: fromDate
+ *         type: string
+ *       - in: query
+ *         name: toDate
+ *         type: string
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/upload-poster:
+ *  post:
+ *      tags: [Movie]
+ *      consumes:
+ *         multipart/form-data
+ *      parameters:
+ *       - in: query
+ *         name: movie_id
+ *         type: integer
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *       - in: formData
+ *         description: The uploaded file data
+ *         name: avatarURL
+ *         required: true
+ *         type: file
+ *      responses:
+ *          200:
+ *              description: success
+ */

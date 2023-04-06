@@ -253,6 +253,50 @@ const validators = {
     })
     return numberSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  insertMovieValidate: (data) => {
+    const userSchema = Joi.object({
+      movie_name: Joi.string().max(100).required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.NAME.EMPTY,
+        'string.max': ValidateMessage.ERROR_MOVIE.NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_MOVIE.NAME.FORMAT
+      }),
+      trailer: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.TRAILER.EMPTY,
+        'string.base': ValidateMessage.ERROR_MOVIE.TRAILER.FORMAT
+      }),
+      runtime: Joi.number().integer().min(1).max(240).required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.RUNTIMES.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.RUNTIMES.FORMAT,
+        'number.min': ValidateMessage.ERROR_MOVIE.RUNTIMES.MIN_LENGTH,
+        'number.max': ValidateMessage.ERROR_MOVIE.RUNTIMES.MAX_LENGTH
+      }),
+      age_type: Joi.number().integer().min(1).required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.AGE_TYPE.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.AGE_TYPE.FORMAT,
+        'number.min': ValidateMessage.ERROR_MOVIE.AGE_TYPE.MIN_LENGTH
+      }),
+      release_date: Joi.date().required().messages({
+        'date.base': ValidateMessage.ERROR_MOVIE.REALEASE_DATE.BASE
+      }),
+      comming_soon: Joi.boolean().required().messages({
+        'boolean.base': ValidateMessage.ERROR_MOVIE.COMMING_SOON.BASE
+      }),
+      now_showing: Joi.boolean().required().messages({
+        'boolean.base': ValidateMessage.ERROR_MOVIE.NOW_SHOWING.BASE
+      })
+    })
+    return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  pagingMovieByDateValidate: (data) => {
+    const movieSchema = Joi.object({
+      fromDate: Joi.date().required(),
+      toDate: Joi.date().greater(Joi.ref('fromDate')).required().messages({
+        'date.greater': ValidateMessage.ERROR_DATE.GEATER
+      })
+    })
+    return movieSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+
   imageValidate: (data) => {
     const imageSchema = Joi.object({
       image_name: Joi.string().min(3).max(40).required().messages({

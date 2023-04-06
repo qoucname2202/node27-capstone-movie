@@ -28,6 +28,7 @@
     "prisma": "^4.12.0",
     "slugify": "^1.6.6",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.2"
+    "swagger-ui-express": "^4.6.2",
+    "validate-date": "^2.0.0"
   }
 }

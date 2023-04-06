@@ -4,7 +4,10 @@ const { PrismaClient } = require('@prisma/client')
 const model = new PrismaClient()
 const { checkAccessToken } = require('../middlewares/auth.middleware')
 const moment = require('moment')
-const { profileUserLike, profileUserRating } = require('../utils/helpers')
+const { profileUserLike, profileUserRating, getDatesInRange } = require('../utils/helpers')
+const validateDate = require('validate-date')
+const { uploadPoster } = require('../utils/file')
+const fs = require('fs')
 
 const movieController = {
   // Get banner movie
@@ -218,7 +221,45 @@ const movieController = {
   // Get all movie by date
   getMovieByDate: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Get movie by date successfully!')
+      let { fromDate, toDate } = req.query
+      let checkPromDate = validateDate(fromDate, (responseType = 'boolean'), (dateFormat = 'yyyy/mm/dd'))
+      let checkToDate = validateDate(toDate, (responseType = 'boolean'), (dateFormat = 'yyyy/mm/dd'))
+      if (checkPromDate && checkToDate) {
+        let { error } = await validators.pagingMovieByDateValidate(req.query)
+        if (!error) {
+          let movieLst = await model.movie.findMany({
+            orderBy: {
+              release_date: 'asc'
+            },
+            include: {
+              age_type: true
+            }
+          })
+          let start = new Date(fromDate)
+          let end = new Date(toDate)
+          let range = getDatesInRange(start, end)
+          let newMovieLst = []
+          for (let i = 0; i < movieLst.length; i++) {
+            let movieItem = movieLst[i]
+            range.forEach((date) => {
+              if (date === movieItem.release_date) {
+                newMovieLst.push(movieItem)
+              }
+            })
+          }
+          let result = newMovieLst.map((movieItem) => {
+            let { age_type, ...orther } = movieItem
+            let { age_type_name, description } = age_type
+            let { age_id, updated_at, is_removed, short_desc, backdrops, ...movie } = orther
+            return { ...movie, age_type: age_type_name, age_type_desc: description }
+          })
+          return RessponseMessage.success(res, result, 'Successfully!')
+        } else {
+          return RessponseMessage.badRequest(res, '', error.details)
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Invalid date. Please enter date dd/mm/yyyy!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -226,7 +267,31 @@ const movieController = {
   // Upload poster
   uploadPoster: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Upload poster successfully!')
+      let { movie_id } = req.query
+      let { error, value } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: value?.movie_id
+          }
+        })
+        if (movieExist) {
+          if (!req.file) {
+            return RessponseMessage.badRequest(res, '', 'Invalid file format. should be png/jpg/jpeg/webp!')
+          } else {
+            fs.readFile(process.cwd() + '/public/img/' + req.file.filename, (err, data) => {
+              let fileName = `"data:${req.file.mimetype};base64,${Buffer.fromDate(data).toString('base64')}"`
+              fs.unlinkSync(process.cwd() + '/public/img/' + req.file.filename)
+              let formatString = fileName.slice(1, fileName.length - 1)
+              uploadPoster(res, formatString, movie_id)
+            })
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -234,7 +299,12 @@ const movieController = {
   // Insert movie
   insertMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Insert movie successfully!')
+      let { error, value } = await validators.insertMovieValidate(req.body)
+      if (!error) {
+        console.log(value)
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }

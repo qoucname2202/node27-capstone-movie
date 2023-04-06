@@ -46,9 +46,12 @@ const ValidateMessage = {
   },
   ERROR_AMOUNT: {
     EMPTY: 'Amount cannot be an empty field',
-    MIN_LENGTH: 'The length of amount should be more than 1 character',
-    MAX_LENGTH: 'The length of amount must be a string with a maximum 5',
+    MIN_LENGTH: 'Amount must be greater or equal to 1',
+    MAX_LENGTH: 'Amount must be less or equal to 5',
     AMOUNT_FORMAT: 'Amount must be a number'
+  },
+  ERROR_DATE: {
+    GEATER: 'To date is must greater than from date'
   },
   ERROR_IMAGE_NAME: {
     EMPTY: 'Image name cannot be an empty field',
@@ -68,8 +71,8 @@ const ValidateMessage = {
   },
   ERROR_STAR_COMMENT: {
     EMPTY: 'Comment star cannot be an empty field',
-    MIN_LENGTH: 'The length of comment star should be more than 1 character',
-    MAX_LENGTH: 'The length of comment star must be a string with a maximum 5',
+    MIN_LENGTH: 'Comment star must be greater or equal to 1',
+    MAX_LENGTH: 'Comment star must be less or equal to 5',
     STAR_FORMAT: 'Comment star must be a number'
   },
   ERROR_TOKEN: {
@@ -77,6 +80,37 @@ const ValidateMessage = {
     MIN_LENGTH: 'The length of token should be more than 3 character',
     MAX_LENGTH: 'The length of token must be a string with a maximum 250',
     NAME_FORMAT: 'Token must be a string'
+  },
+  ERROR_MOVIE: {
+    NAME: {
+      EMPTY: 'Movie_name cannot be an empty field',
+      MAX_LENGTH: 'The length of movie_name must be a string with a maximum 100',
+      FORMAT: 'Movie_name must be a string'
+    },
+    TRAILER: {
+      EMPTY: 'Trailer cannot be an empty field',
+      FORMAT: 'Trailer must be a string'
+    },
+    RUNTIMES: {
+      EMPTY: 'Runtimes cannot be an empty field',
+      MIN_LENGTH: 'Runtimes must be greater or equal to 1',
+      MAX_LENGTH: 'Runtimes must be less or equal to 240',
+      FORMAT: 'Runtimes must be a number'
+    },
+    AGE_TYPE: {
+      EMPTY: 'Age_type cannot be an empty field',
+      MIN_LENGTH: 'Age_type must be greater or equal to 1',
+      FORMAT: 'Age_type must be a number'
+    },
+    REALEASE_DATE: {
+      BASE: 'Release_date must be a valid date'
+    },
+    COMMING_SOON: {
+      BASE: 'Comming_soon must be a boolean'
+    },
+    NOW_SHOWING: {
+      BASE: 'Now_showing must be a boolean'
+    }
   }
 }
 

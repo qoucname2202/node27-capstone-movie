@@ -1,3 +1,4 @@
+const moment = require('moment')
 const helpers = {
   regexPassword: /^(?=.*\d)(?=.*[A-Z])(?=.*[@$!%*#?&])([a-zA-Z0-9@$!%*#?&]){8,}$/,
   regexPhoneNumber: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
@@ -99,6 +100,15 @@ const helpers = {
         date_rate
       }
     })
+  },
+  getDatesInRange: (startDate, endDate) => {
+    const date = new Date(startDate.getTime())
+    const dates = []
+    while (date <= endDate) {
+      dates.push(moment(new Date(date)).format('DD/MM/YYYY'))
+      date.setDate(date.getDate() + 1)
+    }
+    return dates
   }
 }
 module.exports = helpers
