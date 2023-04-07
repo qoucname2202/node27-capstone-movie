@@ -667,16 +667,42 @@
  *       - in: query
  *         name: movie_id
  *         type: integer
+ *       - in: formData
+ *         description: The uploaded file data
+ *         name: posterURL
+ *         required: true
+ *         type: file
  *       - in: header
  *         description: Please enter Bearer [token]
  *         name: Authorization
  *         required: true
  *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/movies/upload-backdrops:
+ *  post:
+ *      tags: [Movie]
+ *      consumes:
+ *         multipart/form-data
+ *      parameters:
+ *       - in: query
+ *         name: movie_id
+ *         type: integer
  *       - in: formData
  *         description: The uploaded file data
- *         name: avatarURL
+ *         name: backdropsURL
  *         required: true
  *         type: file
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
  *      responses:
  *          200:
  *              description: success

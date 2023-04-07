@@ -6,7 +6,7 @@ const { checkAccessToken } = require('../middlewares/auth.middleware')
 const moment = require('moment')
 const { profileUserLike, profileUserRating, getDatesInRange } = require('../utils/helpers')
 const validateDate = require('validate-date')
-const { uploadPoster } = require('../utils/file')
+const { uploadPoster, uploadBackdrops } = require('../utils/file')
 const fs = require('fs')
 let slugify = require('slugify')
 
@@ -281,10 +281,42 @@ const movieController = {
             return RessponseMessage.badRequest(res, '', 'Invalid file format. should be png/jpg/jpeg/webp!')
           } else {
             fs.readFile(process.cwd() + '/public/img/' + req.file.filename, (err, data) => {
-              let fileName = `"data:${req.file.mimetype};base64,${Buffer.fromDate(data).toString('base64')}"`
+              let fileName = `"data:${req.file.mimetype};base64,${Buffer.from(data).toString('base64')}"`
               fs.unlinkSync(process.cwd() + '/public/img/' + req.file.filename)
               let formatString = fileName.slice(1, fileName.length - 1)
               uploadPoster(res, formatString, movie_id)
+            })
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
+    } catch (err) {
+      RessponseMessage.error(res, 'Internal Server Error')
+    }
+  },
+  // Upload Backdrops
+  uploadBackdrops: async (req, res) => {
+    try {
+      let { movie_id } = req.query
+      let { error, value } = await validators.numberValidate({ movie_id: Number(movie_id) })
+      if (!error) {
+        let movieExist = await model.movie.findUnique({
+          where: {
+            movie_id: value?.movie_id
+          }
+        })
+        if (movieExist) {
+          if (!req.file) {
+            return RessponseMessage.badRequest(res, '', 'Invalid file format. should be png/jpg/jpeg/webp!')
+          } else {
+            fs.readFile(process.cwd() + '/public/img/' + req.file.filename, (err, data) => {
+              let fileName = `"data:${req.file.mimetype};base64,${Buffer.from(data).toString('base64')}"`
+              fs.unlinkSync(process.cwd() + '/public/img/' + req.file.filename)
+              let formatString = fileName.slice(1, fileName.length - 1)
+              uploadBackdrops(res, formatString, movie_id)
             })
           }
         } else {

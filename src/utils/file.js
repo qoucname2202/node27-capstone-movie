@@ -31,6 +31,20 @@ const file = {
     if (result) {
       return RessponseMessage.success(res, '', 'Upload poster successfully!')
     }
+  },
+  uploadBackdrops: async (res, backdropsURL, movie_id) => {
+    let result = await model.movie.update({
+      where: {
+        movie_id: Number(movie_id)
+      },
+      data: {
+        backdrops: backdropsURL,
+        updated_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+      }
+    })
+    if (result) {
+      return RessponseMessage.success(res, '', 'Upload backdrops successfully!')
+    }
   }
 }
 
