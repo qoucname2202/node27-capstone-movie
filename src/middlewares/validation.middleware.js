@@ -291,6 +291,69 @@ const validators = {
     })
     return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  updateMovieValidate: (data) => {
+    const userSchema = Joi.object({
+      movie_name: Joi.string().max(100).required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.NAME.EMPTY,
+        'string.max': ValidateMessage.ERROR_MOVIE.NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_MOVIE.NAME.FORMAT
+      }),
+      trailer: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.TRAILER.EMPTY,
+        'string.base': ValidateMessage.ERROR_MOVIE.TRAILER.FORMAT
+      }),
+      short_desc: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.SHORT_DESC.EMPTY,
+        'string.base': ValidateMessage.ERROR_MOVIE.SHORT_DESC.FORMAT
+      }),
+      overview: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.OVERVIEW.EMPTY,
+        'string.base': ValidateMessage.ERROR_MOVIE.OVERVIEW.FORMAT
+      }),
+      poster: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.POSTER.EMPTY,
+        'string.base': ValidateMessage.ERROR_MOVIE.POSTER.FORMAT
+      }),
+      backdrops: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.BACKDROPS.EMPTY,
+        'string.base': ValidateMessage.ERROR_MOVIE.BACKDROPS.FORMAT
+      }),
+      runtime: Joi.number().integer().min(1).max(240).required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.RUNTIMES.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.RUNTIMES.FORMAT,
+        'number.min': ValidateMessage.ERROR_MOVIE.RUNTIMES.MIN_LENGTH,
+        'number.max': ValidateMessage.ERROR_MOVIE.RUNTIMES.MAX_LENGTH
+      }),
+      country: Joi.string().min(2).max(10).required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.COUNTRY.EMPTY,
+        'string.max': ValidateMessage.ERROR_MOVIE.COUNTRY.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_MOVIE.COUNTRY.FORMAT
+      }),
+      language: Joi.string().max(100).required().messages({
+        'string.empty': ValidateMessage.ERROR_MOVIE.LANGUAGE.EMPTY,
+        'string.max': ValidateMessage.ERROR_MOVIE.LANGUAGE.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_MOVIE.LANGUAGE.FORMAT
+      }),
+      age_id: Joi.number().integer().min(1).required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.AGE_ID.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.AGE_ID.FORMAT,
+        'number.min': ValidateMessage.ERROR_MOVIE.AGE_ID.MIN_LENGTH
+      }),
+      hot: Joi.boolean().required().messages({
+        'boolean.base': ValidateMessage.ERROR_MOVIE.HOT.BASE
+      }),
+      release_date: Joi.date().required().messages({
+        'date.base': ValidateMessage.ERROR_MOVIE.REALEASE_DATE.BASE
+      }),
+      comming_soon: Joi.boolean().required().messages({
+        'boolean.base': ValidateMessage.ERROR_MOVIE.COMMING_SOON.BASE
+      }),
+      now_showing: Joi.boolean().required().messages({
+        'boolean.base': ValidateMessage.ERROR_MOVIE.NOW_SHOWING.BASE
+      })
+    })
+    return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
   pagingMovieByDateValidate: (data) => {
     const movieSchema = Joi.object({
       fromDate: Joi.date().required(),

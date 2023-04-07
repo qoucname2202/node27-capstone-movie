@@ -91,9 +91,21 @@ const ValidateMessage = {
       EMPTY: 'Trailer cannot be an empty field',
       FORMAT: 'Trailer must be a string'
     },
+    SHORT_DESC: {
+      EMPTY: 'Short description cannot be an empty field',
+      FORMAT: 'Short description must be a string'
+    },
     OVERVIEW: {
       EMPTY: 'Overview cannot be an empty field',
       FORMAT: 'Overview must be a string'
+    },
+    POSTER: {
+      EMPTY: 'Poster cannot be an empty field',
+      FORMAT: 'Poster must be a string'
+    },
+    BACKDROPS: {
+      EMPTY: 'Backdrops cannot be an empty field',
+      FORMAT: 'Backdrops must be a string'
     },
     RUNTIMES: {
       EMPTY: 'Runtimes cannot be an empty field',
@@ -101,10 +113,24 @@ const ValidateMessage = {
       MAX_LENGTH: 'Runtimes must be less or equal to 240',
       FORMAT: 'Runtimes must be a number'
     },
+    COUNTRY: {
+      EMPTY: 'Country cannot be an empty field',
+      MIN_LENGTH: 'The length of country should be more than 2 character',
+      MAX_LENGTH: 'The length of country must be a string with a maximum 10',
+      FORMAT: 'Country must be a string'
+    },
+    LANGUAGE: {
+      EMPTY: 'Language cannot be an empty field',
+      MAX_LENGTH: 'The length of language must be a string with a maximum 100',
+      FORMAT: 'Language must be a string'
+    },
     AGE_ID: {
       EMPTY: 'Age_id cannot be an empty field',
       MIN_LENGTH: 'Age_id must be greater or equal to 1',
       FORMAT: 'Age_id must be a number'
+    },
+    HOT: {
+      BASE: 'Hot must be a boolean'
     },
     REALEASE_DATE: {
       BASE: 'Release_date must be a valid date'

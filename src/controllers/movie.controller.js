@@ -347,7 +347,81 @@ const movieController = {
   // update movie
   updateMovie: async (req, res) => {
     try {
-      return RessponseMessage.success(res, 'Successfully!', 'Update movie successfully!')
+      let { movie_id } = req.query
+      let movieExist = await model.movie.findUnique({
+        where: {
+          movie_id: Number(movie_id)
+        }
+      })
+      if (movieExist) {
+        let { error, value } = await validators.updateMovieValidate(req.body)
+        if (!error) {
+          let ageExist = await model.age_type.findUnique({
+            where: {
+              age_id: Number(value?.age_id)
+            }
+          })
+          if (ageExist) {
+            let {
+              comming_soon,
+              now_showing,
+              movie_name,
+              release_date,
+              trailer,
+              overview,
+              runtime,
+              age_id,
+              short_desc,
+              poster,
+              backdrops,
+              hot,
+              country,
+              language
+            } = value
+            if (comming_soon && now_showing) {
+              return RessponseMessage.badRequest(
+                res,
+                '',
+                'If comming_soon is true, then now_showing must be false, and vice versa'
+              )
+            } else {
+              let alias = slugify(movie_name, { replacement: '-', remove: undefined, lower: true, trim: true })
+              let dateFormat = moment(release_date).format('DD/MM/YYYY')
+              let movieSchema = {
+                movie_name,
+                alias,
+                trailer,
+                short_desc,
+                overview,
+                poster,
+                backdrops,
+                runtime: Number(runtime),
+                age_id: Number(age_id),
+                country,
+                language,
+                release_date: dateFormat,
+                hot,
+                comming_soon,
+                now_showing,
+                updated_at: moment().format('YYYY-MM-DDTHH:mm:ss.SSSSSZ')
+              }
+              let result = await model.movie.update({
+                where: {
+                  movie_id: Number(movie_id)
+                },
+                data: movieSchema
+              })
+              return RessponseMessage.success(res, result, 'Update movie successfully!')
+            }
+          } else {
+            return RessponseMessage.badRequest(res, '', 'Age_type does not exists!')
+          }
+        } else {
+          return RessponseMessage.badRequest(res, '', error.details[0].message)
+        }
+      } else {
+        return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
+      }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
     }
@@ -441,8 +515,23 @@ const movieController = {
               actor: true
             }
           })
-          console.log(actLst)
-          // return RessponseMessage.success(res, result, 'Successfully!')
+          let result = actLst.map((item) => {
+            let { role, actor } = item
+            let { act_id, full_name, alias, gender, birth_day, place_of_birth, avatar, bio } = actor
+            let actorSchema = {
+              act_id,
+              full_name,
+              alias,
+              role,
+              gender: gender === true ? 'male' : 'female',
+              birth_day: moment(birth_day).format('DD/MM/YYYY'),
+              place_of_birth,
+              avatar,
+              bio
+            }
+            return actorSchema
+          })
+          return RessponseMessage.success(res, result, 'Successfully!')
         } else {
           return RessponseMessage.badRequest(res, '', 'Movie does not exist!')
         }
