@@ -354,6 +354,90 @@ const validators = {
     })
     return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  insertActorValidate: (data) => {
+    const actorSchema = Joi.object({
+      full_name: Joi.string().max(100).required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.NAME.EMPTY,
+        'string.max': ValidateMessage.ERROR_ACTOR.NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_ACTOR.NAME.FORMAT
+      }),
+      gender: Joi.string().valid('male', 'female').required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.GENDER.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.GENDER.FORMAT,
+        'any.only': ValidateMessage.ERROR_ACTOR.GENDER.DIFF
+      }),
+      birth_day: Joi.date().required().messages({
+        'date.base': ValidateMessage.ERROR_ACTOR.BIRTHDAY.BASE
+      }),
+      place_of_birth: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.ADDRESS.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.ADDRESS.FORMAT
+      }),
+      bio: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.BIO.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.BIO.FORMAT
+      }),
+      avatar: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.AVATAR.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.AVATAR.FORMAT
+      })
+    })
+    return actorSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  updateActorValidate: (data) => {
+    const actorSchema = Joi.object({
+      full_name: Joi.string().max(30).required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.NAME.EMPTY,
+        'string.max': ValidateMessage.ERROR_ACTOR.NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_ACTOR.NAME.FORMAT
+      }),
+      alias: Joi.string().max(40).required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.ALIAS.EMPTY,
+        'string.max': ValidateMessage.ERROR_ACTOR.ALIAS.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_ACTOR.ALIAS.FORMAT
+      }),
+      gender: Joi.string().valid('male', 'female').required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.GENDER.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.GENDER.FORMAT,
+        'any.only': ValidateMessage.ERROR_ACTOR.GENDER.DIFF
+      }),
+      birth_day: Joi.date().required().messages({
+        'date.base': ValidateMessage.ERROR_ACTOR.BIRTHDAY.BASE
+      }),
+      place_of_birth: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.ADDRESS.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.ADDRESS.FORMAT
+      }),
+      bio: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.BIO.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.BIO.FORMAT
+      }),
+      avatar: Joi.string().required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.AVATAR.EMPTY,
+        'string.base': ValidateMessage.ERROR_ACTOR.AVATAR.FORMAT
+      })
+    })
+    return actorSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  actorIdValidate: (data) => {
+    const actorSchema = Joi.object({
+      actor_id: Joi.number().integer().required().messages({
+        'number.empty': ValidateMessage.ERROR_ACTOR.ID.EMPTY,
+        'number.base': ValidateMessage.ERROR_ACTOR.ID.FORMAT
+      })
+    })
+    return actorSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  actorNameValidate: (data) => {
+    const actorSchema = Joi.object({
+      actor_name: Joi.string().max(100).required().messages({
+        'string.empty': ValidateMessage.ERROR_ACTOR.NAME.EMPTY,
+        'string.max': ValidateMessage.ERROR_ACTOR.NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_ACTOR.NAME.FORMAT
+      })
+    })
+    return actorSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
   pagingMovieByDateValidate: (data) => {
     const movieSchema = Joi.object({
       fromDate: Joi.date().required(),
@@ -363,7 +447,6 @@ const validators = {
     })
     return movieSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
-
   imageValidate: (data) => {
     const imageSchema = Joi.object({
       image_name: Joi.string().min(3).max(40).required().messages({

@@ -815,3 +815,143 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/actors/all-actor:
+ *  get:
+ *      tags: [Actor]
+ *      parameters:
+ *       - in: query
+ *         name: actor_name
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/actors/insert:
+ *  post:
+ *      tags: [Actor]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             full_name:
+ *               type: string
+ *             gender:
+ *               type: string
+ *             birth_day:
+ *               type: string
+ *             place_of_birth:
+ *               type: string
+ *             bio:
+ *               type: string
+ *             avatar:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/actors/update:
+ *  put:
+ *      tags: [Actor]
+ *      parameters:
+ *      - in: query
+ *        name: actor_id
+ *        type: integer
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             full_name:
+ *               type: string
+ *             alias:
+ *               type: string
+ *             gender:
+ *               type: string
+ *             birth_day:
+ *               type: string
+ *             place_of_birth:
+ *               type: string
+ *             bio:
+ *               type: string
+ *             avatar:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/actors/delete:
+ *  delete:
+ *      tags: [Actor]
+ *      parameters:
+ *      - in: query
+ *        name: actor_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/actors/profile:
+ *  get:
+ *      tags: [Actor]
+ *      parameters:
+ *      - in: query
+ *        name: actor_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/actors/movie-acting:
+ *  get:
+ *      tags: [Actor]
+ *      parameters:
+ *      - in: query
+ *        name: actor_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */

@@ -141,6 +141,42 @@ const ValidateMessage = {
     NOW_SHOWING: {
       BASE: 'Now_showing must be a boolean'
     }
+  },
+  ERROR_ACTOR: {
+    ID: {
+      FORMAT: 'Invalid actor_id must be a number',
+      EMPTY: 'Actor_id can not be an empty field'
+    },
+    NAME: {
+      EMPTY: 'Actor_name cannot be an empty field!',
+      MAX_LENGTH: 'The length of actor_name must be a string with a maximum 30!',
+      FORMAT: 'Actor_name must be a string!'
+    },
+    ALIAS: {
+      EMPTY: 'Alias cannot be an empty field!',
+      MAX_LENGTH: 'The length of alias must be a string with a maximum 40!',
+      FORMAT: 'Alias must be a string!'
+    },
+    BIRTHDAY: {
+      BASE: 'Birth_day must be a valid date!'
+    },
+    GENDER: {
+      EMPTY: 'Gender cannot be an empty field!',
+      FORMAT: 'Gender must be a string!',
+      DIFF: 'Gender must be male or female!'
+    },
+    ADDRESS: {
+      EMPTY: 'Place_of_birth cannot be an empty field!',
+      FORMAT: 'Place_of_birth must be a string!'
+    },
+    BIO: {
+      EMPTY: 'Bio cannot be an empty field!',
+      FORMAT: 'Bio must be a string!'
+    },
+    AVATAR: {
+      EMPTY: 'Avatar cannot be an empty field!',
+      FORMAT: 'Avatar must be a string!'
+    }
   }
 }
 
