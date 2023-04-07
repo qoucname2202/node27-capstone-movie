@@ -720,6 +720,59 @@
 
 /**
  * @swagger
+ * /api/v1/movies/update:
+ *  put:
+ *      tags: [Movie]
+ *      parameters:
+ *      - in: query
+ *        name: movie_id
+ *        type: integer
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             movie_name:
+ *               type: string
+ *             trailer:
+ *               type: string
+ *             short_desc:
+ *               type: string
+ *             overview:
+ *               type: string
+ *             poster:
+ *               type: string
+ *             backdrops:
+ *               type: string
+ *             runtime:
+ *               type: number
+ *             country:
+ *               type: string
+ *             language:
+ *               type: string
+ *             age_id:
+ *               type: number
+ *             release_date:
+ *               type: string
+ *             hot:
+ *               type: boolean
+ *               default: false
+ *             comming_soon:
+ *               type: boolean
+ *             now_showing:
+ *               type: boolean
+ *               default: false
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
  * /api/v1/movies/delete:
  *  delete:
  *      tags: [Movie]
