@@ -981,3 +981,113 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/comments/all-comment:
+ *  get:
+ *      tags: [Comment]
+ *      parameters:
+ *       - in: query
+ *         name: movie_id
+ *         type: integer
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/comments/insert:
+ *  post:
+ *      tags: [Comment]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             movie_id:
+ *               type: integer
+ *             content:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/comments/update:
+ *  put:
+ *      tags: [Comment]
+ *      parameters:
+ *      - in: query
+ *        name: comment_id
+ *        type: integer
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             movie_id:
+ *               type: integer
+ *             content:
+ *               type: string
+ *             comment_star:
+ *               type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/comments/delete:
+ *  delete:
+ *      tags: [Comment]
+ *      parameters:
+ *      - in: query
+ *        name: comment_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/comments/users:
+ *  get:
+ *      tags: [Comment]
+ *      parameters:
+ *       - in: query
+ *         name: movie_id
+ *         type: integer
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */

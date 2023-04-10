@@ -199,32 +199,36 @@ const validators = {
     })
     return userSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
-  commentValidate: (data) => {
+  insertCommentValidate: (data) => {
     const commentSchema = Joi.object({
-      image_id: Joi.number().integer().required().messages({
-        'number.empty': ValidateMessage.ERROR_ID_NUMB.EMPTY,
-        'number.base': ValidateMessage.ERROR_ID_NUMB.NUMB_FORMAT
+      movie_id: Joi.number().integer().required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.ID.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.ID.FORMAT
       }),
       content: Joi.string().min(3).required().messages({
-        'string.empty': ValidateMessage.ERROR_CONTENT.EMPTY,
-        'string.min': ValidateMessage.ERROR_CONTENT.MIN_LENGTH,
-        'string.base': ValidateMessage.ERROR_CONTENT.NAME_FORMAT
+        'string.empty': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.CONTENT.EMPTY,
+        'string.min': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.CONTENT.MIN_LENGTH,
+        'string.base': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.CONTENT.FORMAT
       })
     })
     return commentSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
-  contentValidate: (data) => {
+  updateCommentValidate: (data) => {
     const commentSchema = Joi.object({
+      movie_id: Joi.number().integer().required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.ID.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.ID.FORMAT
+      }),
       content: Joi.string().min(3).required().messages({
-        'string.empty': ValidateMessage.ERROR_CONTENT.EMPTY,
-        'string.min': ValidateMessage.ERROR_CONTENT.MIN_LENGTH,
-        'string.base': ValidateMessage.ERROR_CONTENT.NAME_FORMAT
+        'string.empty': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.CONTENT.EMPTY,
+        'string.min': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.CONTENT.MIN_LENGTH,
+        'string.base': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.CONTENT.FORMAT
       }),
       comment_star: Joi.number().integer().min(1).max(5).required().messages({
-        'number.empty': ValidateMessage.ERROR_STAR_COMMENT.EMPTY,
-        'number.base': ValidateMessage.ERROR_STAR_COMMENT.STAR_FORMAT,
-        'number.min': ValidateMessage.ERROR_STAR_COMMENT.MIN_LENGTH,
-        'number.max': ValidateMessage.ERROR_STAR_COMMENT.MAX_LENGTH
+        'number.empty': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.STAR_COMMENT.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.STAR_COMMENT.FORMAT,
+        'number.min': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.STAR_COMMENT.MIN_LENGTH,
+        'number.max': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.STAR_COMMENT.MAX_LENGTH
       })
     })
     return commentSchema.validate(data, { stripUnknown: true, abortEarly: false })
@@ -237,6 +241,15 @@ const validators = {
       })
     })
     return numberSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  commentIDValidate: (data) => {
+    const commentSchema = Joi.object({
+      comment_id: Joi.number().integer().required().messages({
+        'number.empty': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.ID_COMMENT.EMPTY,
+        'number.base': ValidateMessage.ERROR_MOVIE.COMMENT_MOVIE.ID_COMMENT.FORMAT
+      })
+    })
+    return commentSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
   ratingValidate: (data) => {
     const numberSchema = Joi.object({

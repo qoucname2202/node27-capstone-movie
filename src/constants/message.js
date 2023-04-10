@@ -69,12 +69,6 @@ const ValidateMessage = {
     MAX_LENGTH: 'The length of the parameter must be a string with a maximum 30',
     NAME_FORMAT: 'Content must be a string'
   },
-  ERROR_STAR_COMMENT: {
-    EMPTY: 'Comment star cannot be an empty field',
-    MIN_LENGTH: 'Comment star must be greater or equal to 1',
-    MAX_LENGTH: 'Comment star must be less or equal to 5',
-    STAR_FORMAT: 'Comment star must be a number'
-  },
   ERROR_TOKEN: {
     EMPTY: 'Token cannot be an empty field',
     MIN_LENGTH: 'The length of token should be more than 3 character',
@@ -140,6 +134,27 @@ const ValidateMessage = {
     },
     NOW_SHOWING: {
       BASE: 'Now_showing must be a boolean'
+    },
+    COMMENT_MOVIE: {
+      ID: {
+        EMPTY: 'Movie_id cannot be an empty field',
+        FORMAT: 'Movie_id must be a number'
+      },
+      CONTENT: {
+        EMPTY: 'Content cannot be an empty field',
+        MIN_LENGTH: 'The length of content should be more than 3 character',
+        FORMAT: 'Content must be a string'
+      },
+      STAR_COMMENT: {
+        EMPTY: 'Comment star cannot be an empty field',
+        MIN_LENGTH: 'Comment star must be greater or equal to 1',
+        MAX_LENGTH: 'Comment star must be less or equal to 5',
+        FORMAT: 'Comment star must be a number'
+      },
+      ID_COMMENT: {
+        EMPTY: 'Comment_id cannot be an empty field',
+        FORMAT: 'Comment_id must be a number'
+      }
     }
   },
   ERROR_ACTOR: {
