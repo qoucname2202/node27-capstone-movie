@@ -955,3 +955,29 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/actors/upload-avatar:
+ *  post:
+ *      tags: [Actor]
+ *      consumes:
+ *         multipart/form-data
+ *      parameters:
+ *       - in: query
+ *         name: actor_id
+ *         type: integer
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *       - in: formData
+ *         description: The uploaded file avatar actor
+ *         name: actURL
+ *         required: true
+ *         type: file
+ *      responses:
+ *          200:
+ *              description: success
+ */

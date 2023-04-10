@@ -4,6 +4,8 @@ const { PrismaClient } = require('@prisma/client')
 const model = new PrismaClient()
 const moment = require('moment')
 const slugify = require('slugify')
+const { updateAvatarAct } = require('../utils/file')
+const fs = require('fs')
 
 const actorController = {
   // Get all actor
@@ -107,7 +109,7 @@ const actorController = {
   deleteActor: async (req, res) => {
     try {
       let { actor_id } = req.query
-      let { error, value } = await validators.actorIdValidate({ actor_id })
+      let { error } = await validators.actorIdValidate({ actor_id })
       if (!error) {
         let checkActor = await model.actor.findUnique({
           where: {
@@ -214,6 +216,24 @@ const actorController = {
         }
       } else {
         return RessponseMessage.badRequest(res, '', error.details[0].message)
+      }
+    } catch (err) {
+      RessponseMessage.error(res, 'Internal Server Error')
+    }
+  },
+  // upload avatar actor
+  uploadAvatar: async (req, res) => {
+    try {
+      let { actor_id } = req.query
+      if (!req.file) {
+        return RessponseMessage.badRequest(res, '', 'Invalid file format. should be png/jpg/jpeg/webp!')
+      } else {
+        fs.readFile(process.cwd() + '/public/img/' + req.file.filename, (err, data) => {
+          let fileName = `"data:${req.file.mimetype};base64,${Buffer.from(data).toString('base64')}"`
+          fs.unlinkSync(process.cwd() + '/public/img/' + req.file.filename)
+          let formatString = fileName.slice(1, fileName.length - 1)
+          updateAvatarAct(res, formatString, actor_id)
+        })
       }
     } catch (err) {
       RessponseMessage.error(res, 'Internal Server Error')
