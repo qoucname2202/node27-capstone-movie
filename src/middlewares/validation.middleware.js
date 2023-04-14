@@ -441,6 +441,40 @@ const validators = {
     })
     return actorSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  ageTypeIdValidate: (data) => {
+    const ageTypeSchema = Joi.object({
+      age_id: Joi.number().integer().required().messages({
+        'number.empty': ValidateMessage.ERROR_AGE_TYPE.ID.EMPTY,
+        'number.base': ValidateMessage.ERROR_AGE_TYPE.ID.FORMAT
+      })
+    })
+    return ageTypeSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  ageTypeValidate: (data) => {
+    const ageTypeSchema = Joi.object({
+      age_type_name: Joi.string().max(5).required().messages({
+        'string.empty': ValidateMessage.ERROR_AGE_TYPE.NAME.EMPTY,
+        'string.max': ValidateMessage.ERROR_AGE_TYPE.NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_AGE_TYPE.NAME.FORMAT
+      }),
+      description: Joi.string().min(3).required().messages({
+        'string.empty': ValidateMessage.ERROR_AGE_TYPE.DESC.EMPTY,
+        'string.max': ValidateMessage.ERROR_AGE_TYPE.DESC.MIN_LENGTH,
+        'string.base': ValidateMessage.ERROR_AGE_TYPE.DESC.FORMAT
+      })
+    })
+    return ageTypeSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  updateAgeTypeValidate: (data) => {
+    const ageTypeSchema = Joi.object({
+      description: Joi.string().min(3).required().messages({
+        'string.empty': ValidateMessage.ERROR_AGE_TYPE.DESC.EMPTY,
+        'string.max': ValidateMessage.ERROR_AGE_TYPE.DESC.MIN_LENGTH,
+        'string.base': ValidateMessage.ERROR_AGE_TYPE.DESC.FORMAT
+      })
+    })
+    return ageTypeSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
   actorNameValidate: (data) => {
     const actorSchema = Joi.object({
       actor_name: Joi.string().max(100).required().messages({

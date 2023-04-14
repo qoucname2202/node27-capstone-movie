@@ -192,6 +192,22 @@ const ValidateMessage = {
       EMPTY: 'Avatar cannot be an empty field!',
       FORMAT: 'Avatar must be a string!'
     }
+  },
+  ERROR_AGE_TYPE: {
+    ID: {
+      FORMAT: 'Invalid age_type_id must be a number',
+      EMPTY: 'Age_type_id can not be an empty field'
+    },
+    NAME: {
+      EMPTY: 'Age_type_name cannot be an empty field!',
+      MAX_LENGTH: 'The length of age_type_name must be a string with a maximum 5!',
+      FORMAT: 'Age_type_name must be a string!'
+    },
+    DESC: {
+      EMPTY: 'Description cannot be an empty field!',
+      MIN_LENGTH: 'The length of the parameter should be more than 3 character',
+      FORMAT: 'Description must be a string'
+    }
   }
 }
 

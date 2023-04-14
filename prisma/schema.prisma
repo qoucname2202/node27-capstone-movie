@@ -23,11 +23,11 @@ model actor {
 }
 
 model age_type {
-  age_id        Int       @id @default(autoincrement())
-  age_type_name String    @db.VarChar(50)
-  description   String?   @db.Text
-  is_removed    Boolean?  @default(false)
-  created_at    DateTime? @default(now()) @db.Timestamp(0)
+  age_id        Int      @id @default(autoincrement())
+  age_type_name String   @db.VarChar(50)
+  description   String?  @db.Text
+  is_removed    Boolean? @default(false)
+  created_at    String?  @db.VarChar(100)
   movie         movie[]
 }
 

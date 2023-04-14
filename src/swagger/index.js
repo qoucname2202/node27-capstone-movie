@@ -1091,3 +1091,117 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/ages/all:
+ *  get:
+ *      tags: [Age]
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/ages/type:
+ *  get:
+ *      tags: [Age]
+ *      parameters:
+ *       - in: query
+ *         name: age_id
+ *         type: integer
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/ages/insert:
+ *  post:
+ *      tags: [Age]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             age_type_name:
+ *               type: integer
+ *             description:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/ages/update:
+ *  put:
+ *      tags: [Age]
+ *      parameters:
+ *      - in: query
+ *        name: age_id
+ *        type: integer
+ *      - in: query
+ *        name: age_type_name
+ *        type: string
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             description:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/ages/delete:
+ *  delete:
+ *      tags: [Age]
+ *      parameters:
+ *      - in: query
+ *        name: age_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/ages/movies:
+ *  get:
+ *      tags: [Age]
+ *      parameters:
+ *       - in: query
+ *         name: age_id
+ *         type: integer
+ *       - in: header
+ *         description: Please enter Bearer [token]
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
