@@ -475,6 +475,25 @@ const validators = {
     })
     return ageTypeSchema.validate(data, { stripUnknown: true, abortEarly: false })
   },
+  genresIdValidate: (data) => {
+    const genresSchema = Joi.object({
+      gen_id: Joi.number().integer().required().messages({
+        'number.empty': ValidateMessage.ERROR_GENRES.ID.EMPTY,
+        'number.base': ValidateMessage.ERROR_GENRES.ID.FORMAT
+      })
+    })
+    return genresSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
+  genresValidate: (data) => {
+    const genresSchema = Joi.object({
+      gen_type: Joi.string().max(100).required().messages({
+        'string.empty': ValidateMessage.ERROR_GENRES.NAME.EMPTY,
+        'string.max': ValidateMessage.ERROR_GENRES.NAME.MAX_LENGTH,
+        'string.base': ValidateMessage.ERROR_GENRES.NAME.FORMAT
+      })
+    })
+    return genresSchema.validate(data, { stripUnknown: true, abortEarly: false })
+  },
   actorNameValidate: (data) => {
     const actorSchema = Joi.object({
       actor_name: Joi.string().max(100).required().messages({

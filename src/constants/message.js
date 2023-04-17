@@ -208,6 +208,17 @@ const ValidateMessage = {
       MIN_LENGTH: 'The length of the parameter should be more than 3 character',
       FORMAT: 'Description must be a string'
     }
+  },
+  ERROR_GENRES: {
+    ID: {
+      FORMAT: 'Invalid genres_id must be a number',
+      EMPTY: 'Genres_id can not be an empty field'
+    },
+    NAME: {
+      EMPTY: 'Genres_type cannot be an empty field!',
+      MAX_LENGTH: 'The length of genres_type must be a string with a maximum 100!',
+      FORMAT: 'Genres_type must be a string!'
+    }
   }
 }
 

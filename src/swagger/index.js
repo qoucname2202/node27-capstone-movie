@@ -1205,3 +1205,112 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /api/v1/genres/all-genres:
+ *  get:
+ *      tags: [Genres]
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/genres/search:
+ *  get:
+ *      tags: [Genres]
+ *      parameters:
+ *      - in: query
+ *        name: genres_id
+ *        type: integer
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/genres/insert:
+ *  post:
+ *      tags: [Genres]
+ *      parameters:
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             genres_type:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/genres/update:
+ *  put:
+ *      tags: [Genres]
+ *      parameters:
+ *      - in: query
+ *        name: genres_id
+ *        type: integer
+ *      - in: body
+ *        name: model
+ *        schema:
+ *           properties:
+ *             genres_type:
+ *               type: string
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/genres/delete:
+ *  delete:
+ *      tags: [Genres]
+ *      parameters:
+ *      - in: query
+ *        name: genres_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /api/v1/genres/movies:
+ *  get:
+ *      tags: [Genres]
+ *      parameters:
+ *      - in: query
+ *        name: genres_id
+ *        type: integer
+ *      - in: header
+ *        description: Please enter Bearer [token]
+ *        name: Authorization
+ *        required: true
+ *        type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
